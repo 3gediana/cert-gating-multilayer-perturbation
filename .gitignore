@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# 数据与模型权重（大文件；CIFAR 下载落在 data/）
+data/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.npy
+*.npz
+
+# 系统
+.DS_Store
+Thumbs.db
+
+# 注意：results/metrics.json 与 results/smoke-log.txt 是小体积实验证据，纳入版本控制
