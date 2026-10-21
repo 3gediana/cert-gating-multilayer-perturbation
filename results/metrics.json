@@ -1,0 +1,841 @@
+{
+ "runs": [
+  {
+   "run_id": "smoke-seed0-1792607853",
+   "config": {
+    "phase": "smoke",
+    "seed": 0,
+    "tau_hi": 2.0,
+    "band": 0.3,
+    "device": "cuda",
+    "torch": "2.10.0+cu128",
+    "T": 5,
+    "d": 30,
+    "k": 10,
+    "train_n": 600,
+    "test_n": 256,
+    "anchor_n": 32,
+    "width": 64,
+    "steps": 60,
+    "batch": 256,
+    "lr": 0.001,
+    "slots": 4,
+    "noise": 1.0,
+    "drift": 0.5
+   },
+   "wall_sec": 2.69,
+   "arms": [
+    {
+     "arm": "baseline",
+     "active_channels": [],
+     "records": [
+      {
+       "task": 0,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": null,
+        "bound": null,
+        "beta": null
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9648
+       }
+      },
+      {
+       "task": 1,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.089673,
+        "bound": 234.883086,
+        "beta": 0.1032
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9492,
+        "1": 0.9844
+       }
+      },
+      {
+       "task": 2,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.031179,
+        "bound": 269.580355,
+        "beta": 0.085848
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961
+       }
+      },
+      {
+       "task": 3,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.046701,
+        "bound": 386.352941,
+        "beta": 0.077688
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8633,
+        "1": 0.9336,
+        "2": 0.9805,
+        "3": 0.9961
+       }
+      },
+      {
+       "task": 4,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.017267,
+        "bound": 428.017085,
+        "beta": 0.065118
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8945,
+        "1": 0.9023,
+        "2": 0.9688,
+        "3": 0.9883,
+        "4": 1.0
+       }
+      }
+     ],
+     "summary": {
+      "mean_forgetting": 0.0375,
+      "mean_final_acc": 0.9508,
+      "per_task_forgetting": {
+       "0": 0.0703,
+       "1": 0.082,
+       "2": 0.0273,
+       "3": 0.0078,
+       "4": 0.0
+      },
+      "n_merge": 5,
+      "n_isolate": 0,
+      "n_forced": 0,
+      "action_switch_rate": 0.0,
+      "correlations": {
+       "drift~bound": {
+        "rho": -0.8,
+        "constant": false
+       },
+       "drift~beta": {
+        "rho": 0.8,
+        "constant": false
+       },
+       "bound~beta": {
+        "rho": -1.0,
+        "constant": false
+       }
+      },
+      "param_count": 27826,
+      "slots_used": 1,
+      "timings_sec": {
+       "jacobian": 0.051,
+       "svd": 0.034,
+       "cka": 0.011,
+       "train_merge": 0.464,
+       "train_isolate": 0.0
+      },
+      "trigger_cost_ratio": 0.2055
+     }
+    },
+    {
+     "arm": "cka",
+     "active_channels": [
+      "drift"
+     ],
+     "records": [
+      {
+       "task": 0,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": null,
+        "bound": null,
+        "beta": null
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9648
+       }
+      },
+      {
+       "task": 1,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.089673,
+        "bound": 234.883086,
+        "beta": 0.1032
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9492,
+        "1": 0.9844
+       }
+      },
+      {
+       "task": 2,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.031179,
+        "bound": 269.580355,
+        "beta": 0.085848
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961
+       }
+      },
+      {
+       "task": 3,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.046701,
+        "bound": 386.352941,
+        "beta": 0.077688
+       },
+       "zs": {
+        "drift": -0.4693,
+        "bound": 7.7309,
+        "beta": -1.9405
+       },
+       "max_z": -0.4693,
+       "slot": 0,
+       "evals": {
+        "0": 0.8633,
+        "1": 0.9336,
+        "2": 0.9805,
+        "3": 0.9961
+       }
+      },
+      {
+       "task": 4,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.017267,
+        "bound": 428.017085,
+        "beta": 0.065118
+       },
+       "zs": {
+        "drift": -1.5595,
+        "bound": 2.023,
+        "beta": -2.2367
+       },
+       "max_z": -1.5595,
+       "slot": 0,
+       "evals": {
+        "0": 0.8945,
+        "1": 0.9023,
+        "2": 0.9688,
+        "3": 0.9883,
+        "4": 1.0
+       }
+      }
+     ],
+     "summary": {
+      "mean_forgetting": 0.0375,
+      "mean_final_acc": 0.9508,
+      "per_task_forgetting": {
+       "0": 0.0703,
+       "1": 0.082,
+       "2": 0.0273,
+       "3": 0.0078,
+       "4": 0.0
+      },
+      "n_merge": 5,
+      "n_isolate": 0,
+      "n_forced": 0,
+      "action_switch_rate": 0.0,
+      "correlations": {
+       "drift~bound": {
+        "rho": -0.8,
+        "constant": false
+       },
+       "drift~beta": {
+        "rho": 0.8,
+        "constant": false
+       },
+       "bound~beta": {
+        "rho": -1.0,
+        "constant": false
+       }
+      },
+      "param_count": 27826,
+      "slots_used": 1,
+      "timings_sec": {
+       "jacobian": 0.039,
+       "svd": 0.031,
+       "cka": 0.007,
+       "train_merge": 0.397,
+       "train_isolate": 0.0
+      },
+      "trigger_cost_ratio": 0.1939
+     }
+    },
+    {
+     "arm": "spectral",
+     "active_channels": [
+      "bound"
+     ],
+     "records": [
+      {
+       "task": 0,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": null,
+        "bound": null,
+        "beta": null
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9648
+       }
+      },
+      {
+       "task": 1,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.089673,
+        "bound": 234.883086,
+        "beta": 0.1032
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9492,
+        "1": 0.9844
+       }
+      },
+      {
+       "task": 2,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.031179,
+        "bound": 269.580355,
+        "beta": 0.085848
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961
+       }
+      },
+      {
+       "task": 3,
+       "action": "isolate",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.046701,
+        "bound": 386.352941,
+        "beta": 0.077688
+       },
+       "zs": {
+        "drift": -0.4693,
+        "bound": 7.7309,
+        "beta": -1.9405
+       },
+       "max_z": 7.7309,
+       "slot": 1,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961,
+        "3": 1.0
+       }
+      },
+      {
+       "task": 4,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.07129,
+        "bound": 373.623884,
+        "beta": 0.017073
+       },
+       "zs": {
+        "drift": 0.624,
+        "bound": 1.1835,
+        "beta": -6.753
+       },
+       "max_z": 1.1835,
+       "slot": 0,
+       "evals": {
+        "0": 0.9102,
+        "1": 0.9453,
+        "2": 0.9883,
+        "3": 1.0,
+        "4": 1.0
+       }
+      }
+     ],
+     "summary": {
+      "mean_forgetting": 0.0203,
+      "mean_final_acc": 0.9688,
+      "per_task_forgetting": {
+       "0": 0.0547,
+       "1": 0.0391,
+       "2": 0.0078,
+       "3": 0.0,
+       "4": 0.0
+      },
+      "n_merge": 4,
+      "n_isolate": 1,
+      "n_forced": 0,
+      "action_switch_rate": 0.5,
+      "correlations": {
+       "drift~bound": {
+        "rho": -0.4,
+        "constant": false
+       },
+       "drift~beta": {
+        "rho": 0.2,
+        "constant": false
+       },
+       "bound~beta": {
+        "rho": -0.8,
+        "constant": false
+       }
+      },
+      "param_count": 27826,
+      "slots_used": 2,
+      "timings_sec": {
+       "jacobian": 0.035,
+       "svd": 0.035,
+       "cka": 0.008,
+       "train_merge": 0.367,
+       "train_isolate": 0.071
+      },
+      "trigger_cost_ratio": 0.2146
+     }
+    },
+    {
+     "arm": "beta",
+     "active_channels": [
+      "beta"
+     ],
+     "records": [
+      {
+       "task": 0,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": null,
+        "bound": null,
+        "beta": null
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9648
+       }
+      },
+      {
+       "task": 1,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.089673,
+        "bound": 234.883086,
+        "beta": 0.1032
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9492,
+        "1": 0.9844
+       }
+      },
+      {
+       "task": 2,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.031179,
+        "bound": 269.580355,
+        "beta": 0.085848
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961
+       }
+      },
+      {
+       "task": 3,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.046701,
+        "bound": 386.352941,
+        "beta": 0.077688
+       },
+       "zs": {
+        "drift": -0.4693,
+        "bound": 7.7309,
+        "beta": -1.9405
+       },
+       "max_z": -1.9405,
+       "slot": 0,
+       "evals": {
+        "0": 0.8633,
+        "1": 0.9336,
+        "2": 0.9805,
+        "3": 0.9961
+       }
+      },
+      {
+       "task": 4,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.017267,
+        "bound": 428.017085,
+        "beta": 0.065118
+       },
+       "zs": {
+        "drift": -1.5595,
+        "bound": 2.023,
+        "beta": -2.2367
+       },
+       "max_z": -2.2367,
+       "slot": 0,
+       "evals": {
+        "0": 0.8945,
+        "1": 0.9023,
+        "2": 0.9688,
+        "3": 0.9883,
+        "4": 1.0
+       }
+      }
+     ],
+     "summary": {
+      "mean_forgetting": 0.0375,
+      "mean_final_acc": 0.9508,
+      "per_task_forgetting": {
+       "0": 0.0703,
+       "1": 0.082,
+       "2": 0.0273,
+       "3": 0.0078,
+       "4": 0.0
+      },
+      "n_merge": 5,
+      "n_isolate": 0,
+      "n_forced": 0,
+      "action_switch_rate": 0.0,
+      "correlations": {
+       "drift~bound": {
+        "rho": -0.8,
+        "constant": false
+       },
+       "drift~beta": {
+        "rho": 0.8,
+        "constant": false
+       },
+       "bound~beta": {
+        "rho": -1.0,
+        "constant": false
+       }
+      },
+      "param_count": 27826,
+      "slots_used": 1,
+      "timings_sec": {
+       "jacobian": 0.038,
+       "svd": 0.032,
+       "cka": 0.011,
+       "train_merge": 0.362,
+       "train_isolate": 0.0
+      },
+      "trigger_cost_ratio": 0.2233
+     }
+    },
+    {
+     "arm": "triplet",
+     "active_channels": [
+      "drift",
+      "bound",
+      "beta"
+     ],
+     "records": [
+      {
+       "task": 0,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": null,
+        "bound": null,
+        "beta": null
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9648
+       }
+      },
+      {
+       "task": 1,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.089673,
+        "bound": 234.883086,
+        "beta": 0.1032
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.9492,
+        "1": 0.9844
+       }
+      },
+      {
+       "task": 2,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.031179,
+        "bound": 269.580355,
+        "beta": 0.085848
+       },
+       "zs": {
+        "drift": 0.0,
+        "bound": 0.0,
+        "beta": 0.0
+       },
+       "max_z": 0.0,
+       "slot": 0,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961
+       }
+      },
+      {
+       "task": 3,
+       "action": "isolate",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.046701,
+        "bound": 386.352941,
+        "beta": 0.077688
+       },
+       "zs": {
+        "drift": -0.4693,
+        "bound": 7.7309,
+        "beta": -1.9405
+       },
+       "max_z": 7.7309,
+       "slot": 1,
+       "evals": {
+        "0": 0.8711,
+        "1": 0.9453,
+        "2": 0.9961,
+        "3": 1.0
+       }
+      },
+      {
+       "task": 4,
+       "action": "merge",
+       "forced": false,
+       "hysteresis_override": false,
+       "raws": {
+        "drift": 0.07129,
+        "bound": 373.623884,
+        "beta": 0.017073
+       },
+       "zs": {
+        "drift": 0.624,
+        "bound": 1.1835,
+        "beta": -6.753
+       },
+       "max_z": 1.1835,
+       "slot": 0,
+       "evals": {
+        "0": 0.9102,
+        "1": 0.9453,
+        "2": 0.9883,
+        "3": 1.0,
+        "4": 1.0
+       }
+      }
+     ],
+     "summary": {
+      "mean_forgetting": 0.0203,
+      "mean_final_acc": 0.9688,
+      "per_task_forgetting": {
+       "0": 0.0547,
+       "1": 0.0391,
+       "2": 0.0078,
+       "3": 0.0,
+       "4": 0.0
+      },
+      "n_merge": 4,
+      "n_isolate": 1,
+      "n_forced": 0,
+      "action_switch_rate": 0.5,
+      "correlations": {
+       "drift~bound": {
+        "rho": -0.4,
+        "constant": false
+       },
+       "drift~beta": {
+        "rho": 0.2,
+        "constant": false
+       },
+       "bound~beta": {
+        "rho": -0.8,
+        "constant": false
+       }
+      },
+      "param_count": 27826,
+      "slots_used": 2,
+      "timings_sec": {
+       "jacobian": 0.04,
+       "svd": 0.028,
+       "cka": 0.01,
+       "train_merge": 0.38,
+       "train_isolate": 0.068
+      },
+      "trigger_cost_ratio": 0.2033
+     }
+    }
+   ]
+  }
+ ]
+}
