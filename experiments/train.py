@@ -40,8 +40,14 @@ PHASES = {
     "smoke": dict(T=5, d=30, k=10, train_n=600, test_n=256, anchor_n=32,
                   width=64, steps=60, batch=256, lr=1e-3, slots=4,
                   noise=1.0, drift=0.5),
+    # 难度校准 v2（2026-10-22 夜间单元）：width 256 时 baseline 遗忘被容量压到
+    # 0.003-0.005（近饱和、门控从不告警，对比区不存在）；校准扫描
+    # （seed 0，T=10）：w256/drift1.0 F=0.0030；w128/drift1.0 F=0.0140；
+    # w64/drift1.0 F=0.0342；w64/drift0.5 F=0.0534（acc 0.9436，非零对比区）。
+    # 取 w64/drift0.5（与 smoke 同难度协议，仅 T/步数放量），width 256 记为
+    # pilot-design.md §4 的否决配置（见 DECISIONS.md）。
     "pilot": dict(T=10, d=30, k=10, train_n=2000, test_n=500, anchor_n=64,
-                  width=256, steps=100, batch=256, lr=1e-3, slots=4,
+                  width=64, steps=100, batch=256, lr=1e-3, slots=4,
                   noise=1.0, drift=0.5),
     "cifar": dict(T=5, d=3072, k=2, train_n=2000, test_n=500, anchor_n=64,
                   width=256, steps=100, batch=256, lr=1e-3, slots=4),
@@ -239,11 +245,22 @@ def main():
     ap.add_argument("--tau-hi", type=float, default=2.0)
     ap.add_argument("--band", type=float, default=0.3)
     ap.add_argument("--device", default="auto")
+    # 难度校准覆盖（pilot-design.md §4 要求 baseline 遗忘非零才有效度；
+    # 宽度提升会压掉遗忘，这些覆盖只用于校准扫描，校准结果拍板后烘焙进 PHASES）
+    for flag, key, typ in [("--width", "width", int), ("--drift", "drift", float),
+                           ("--noise", "noise", float), ("--k", "k", int),
+                           ("--steps", "steps", int)]:
+        ap.add_argument(flag, type=typ, default=None)
     args = ap.parse_args()
 
     device = ("cuda" if torch.cuda.is_available() else "cpu") \
         if args.device == "auto" else args.device
     cfg = dict(PHASES[args.phase])
+    # 应用难度校准覆盖（None 保持 phase 默认值）
+    for key in ["width", "drift", "noise", "k", "steps"]:
+        v = getattr(args, key)
+        if v is not None:
+            cfg[key] = int(v) if key in ("k", "steps", "width") else float(v)
     lines = []
 
     def log(msg):

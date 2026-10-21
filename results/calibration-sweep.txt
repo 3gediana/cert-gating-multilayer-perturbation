@@ -1,0 +1,19 @@
+难度校准扫描（2026-10-22，夜间生产单元）
+命令：PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed 0 \
+  --width W --drift D --out <scratch> --log <scratch>
+背景：pilot-design.md §4 要求 baseline 遗忘非零；width 256 首跑 F=0.0052 近饱和
+（width 64/smoke 曾为 0.0375）——容量压掉对比区，按指令先调难度。
+
+配置              baseline F    acc      isolate(spectral)   cost_ratio  params
+w256 drift1.0     0.0030       0.9966   0/10                 1.584       320612
+w128 drift1.0     0.0140       0.9858   2/10                 0.527       94820
+w64  drift1.0     0.0342       0.9646   2/10 (switch 0.44)   0.350       31076
+w64  drift0.5     0.0534       0.9436   2/10 (switch 0.44)   0.347       31076
+
+结论：width 256 无论 drift 取值遗忘都近 0（容量饱和），且 spectral 从不告警
+（门控路径无动作，主判据不可判读）；width 64 / drift 0.5 与 smoke 同难度协议，
+F=0.0534、acc=0.9436 进入非零对比区，门控有实际 isolate 动作。
+拍板：pilot v2 = T=10 × width=64 × steps=100 × drift=0.5 × noise=1.0 × k=10
+× anchor_n=64 × slots=4（已烘焙进 PHASES["pilot"]；width 256 配置否决，
+理由：对比区不存在 + cost_ratio 1.5 远超 F5 阈值 0.2）。
+注意：width 256 的 seed-0 数据保留在 results/metrics.json（runs=2）作历史记录。
