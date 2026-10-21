@@ -105,10 +105,16 @@ action=merge。槽位耗尽 → 强制 merge（记 forced）。hysteresis：上�
 
 | Phase | 规模 | 目的 | 前置条件 |
 |---|---|---|---|
-| 0（今晚） | 合成 T=5，width 64，5 臂 | 管线验证：三量可算、门控可动、遗忘可测、metrics 落盘 | — |
-| 1 | 合成 T=10，width 256，5 臂 × 5 种子（GPU ~1h） | 主判据初判 + F1 检查 | Phase 0 通过 |
-| 2 | Split-CIFAR10 子集，3 种子 | 分布迁移验证 | F1 未触发 |
-| 3 | 合成 T=50 | 长序列预测验证 | F1 未触发 |
+| 0（smoke） | 合成 T=5，width 64，5 臂 | 管线验证：三量可算、门控可动、遗忘可测、metrics 落盘 | — | ✅ 完成 |
+| 1（pilot） | 合成 T=10，width 64（校准 v2，width 256 已否决见下），5 臂 × 5 种子 | 主判据初判 + F1 检查 | Phase 0 通过 | ✅ 完成：主判据未达（F3 路径），F1 未触发，F2/F5 触发，见 results/pilot-summary.md |
+| 2 | Split-CIFAR10 子集，3 种子 | 分布迁移验证 | F1 未触发（已满足） | 待做 |
+| 3 | 合成 T=50 | 长序列预测验证 | F1 未触发 + F2 修复 | 待做 |
+
+**Phase 1 难度校准（2026-10-22 拍板）**：原定 width 256 在 pilot 规模下 baseline 遗忘
+0.003~0.005（容量饱和，spectral 从不告警，对比区不存在）→ 校准扫描定 width 64
+（与 smoke 同难度协议，仅 T/步数放量）。width 256 记否决配置（results/calibration-sweep.txt）。
+判读细则：F1 相关性必须跨种子汇总（单种子 n=9 会产生趋势性假高相关）；
+F2/F5 触发后的处置路径（重设计阈值规则 / 报告成本）见 notes/FAILURE-PATTERNS.md。
 
 **范围声明**：结构动作空间 pilot 只行使 {merge, isolate}；扩展容量/重算全局结构在
 规则中保留接口但 pilot 阶段不触发（阈值设死）。这是有界工作单元的取舍，不是设计遗漏。

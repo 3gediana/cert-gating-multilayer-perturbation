@@ -25,3 +25,15 @@
 ## [2026-10-22] 合成难度校准 + GPU 一次性开销教训
 - 难度：k=4/noise=0.5 首跑 acc 饱和 1.0、遗忘恒 0（对比区不存在）→ 定 k=10/noise=1.0/drift=0.5，baseline F=0.0375 进入非零遗忘区。
 - 工程教训：linear_cka 首调 ~0.12s 的一次性开销污染 F5 臂间比较（首臂假高 2.4×）→ 预热必须覆盖全部触发函数，已在 train.py 预热块。
+
+## [2026-10-22] 难度校准 v2：pilot width 256 否决，定 width 64
+- 方案：Phase 1 pilot 配置由 T=10 × width 256 改为 T=10 × width 64（steps 100，drift 0.5，noise 1.0，k 10，anchor 64——与 smoke 同难度协议仅放量）；train.py 增加 --width/--drift/--noise/--k/--steps 校准覆盖参数。
+- 理由：width 256 时 baseline 遗忘被容量压到 0.003~0.005（近饱和、spectral 臂从不告警、门控路径空转），对比区不存在——pilot-design.md §4 的"baseline 必须有非零遗忘"是有效度前提，难度校准优先于宽度规格。校准扫描（seed 0）：w256/d1.0 F=0.0030；w128/d1.0 F=0.0140；w64/d1.0 F=0.0342；w64/d0.5 F=0.0534（acc 0.9436）。width 256 同时 cost_ratio 1.5+（F5 双杀）。证据 results/calibration-sweep.txt。
+
+## [2026-10-22] Phase 1 pilot 判读（5 种子，width 64）
+- F1 未触发：跨种子汇总（n=45/臂）max|ρ|=0.68，去趋势后 |ρ| 全 <0.35——三量不退化，H 存活。注意 width 256 单种子曾现 ρ(drift,bound)=−0.9，n=9 + 趋势假象，n=45 回落——F1 判读必须跨种子汇总，单种子不可判（smoke 的预判成立）。
+- 主判据未达（F3 路径）：triplet 与 spectral 动作序列 5/5 种子完全一致（ΔF̄=0）；vs cka/beta Δ≈0.02 显著（CI 不含 0、5/5 同向）但 <5pp 条款。校准难度下只有 bound 通道告警（cka 0/50 决策从未告警，beta 仅 seed2 一次）→ 三元组相对单量在 T=10 难度无决策增量。按 §7 F3：pilot 尺度 H 未获支持，升级长序列 Phase 3 再判（T=50），仍无则驳倒。
+- 有效事实（可写进论文的负面骨架）：spectral 单臂门控 F 0.0557→0.0331（相对 −41%，5/5 种子，配对 bootstrap CI [0.0158,0.0297]）——门控本身有效（次判据①），三元组未增量。
+- F2 触发（spectral/triplet switch 0.49/0.67 >0.3）：根因假设 bound 随任务序号单调增长 + RunningZ 全历史均值滞后 → 边界穿越振荡；hysteresis band 0.3 太窄。按预注册"重设计后再判"——下一单元先修（去趋势 z / 提 τ / 持续期平滑三候选），验收 switch<0.3 且 F 不劣化。
+- F5 触发（cost ~0.35 >0.2，SVD 主导）：触发成本随 T 超线性（J 覆盖全部锚任务 ~O(T²m²P) vs 训练 O(T·steps)）；width 256 时 1.5+。必须作为可扩展性缺陷报告（taste 雷②）。
+- 工程坑记录：校准覆盖参数初版 width 按 float 传入 nn.Linear 报 TypeError（width/k/steps 必须 int）——已修。
