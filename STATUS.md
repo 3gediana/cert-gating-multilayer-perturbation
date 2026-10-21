@@ -99,8 +99,8 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
 
 ## git
 - 本地仓库 main 分支，今晚 7 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
-  校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2
-  结果+脚本通用化 / Phase 2 判读落档），未推送
+  校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
+  5a5aeae / Phase 2 判读落档 24f42c2），未推送
 
 ## 下一步（next_units）
 1. **F2 重设计 + pilot 重跑**（Phase 1 遗留，预注册必经步）：bound 趋势性导致 z 振荡，
