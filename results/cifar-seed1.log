@@ -1,0 +1,39 @@
+# run phase=cifar seed=1 device=cuda torch=2.10.0+cu128
+# config={"T": 5, "d": 3072, "k": 2, "train_n": 2000, "test_n": 500, "anchor_n": 64, "width": 256, "steps": 100, "batch": 256, "lr": 0.001, "slots": 4}
+== arm baseline (active=[]) ==
+  [baseline] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.888}
+  [baseline] task 1: action=merge slot=0 drift=0.2520817518234253 bound=514.9644789836602 beta=0.031992267817258835 accs={0: 0.834, 1: 0.825}
+  [baseline] task 2: action=merge slot=0 drift=0.5032012462615967 bound=967.2652290239857 beta=0.06034933030605316 accs={0: 0.559, 1: 0.635, 2: 0.877}
+  [baseline] task 3: action=merge slot=0 drift=0.11391735076904297 bound=1041.98123962502 beta=0.1435883492231369 accs={0: 0.534, 1: 0.535, 2: 0.759, 3: 0.875}
+  [baseline] task 4: action=merge slot=0 drift=0.17604178190231323 bound=1425.3028358014853 beta=0.02536150999367237 accs={0: 0.541, 1: 0.632, 2: 0.672, 3: 0.845, 4: 0.771}
+== arm cka (active=['drift']) ==
+  [cka] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.888}
+  [cka] task 1: action=merge slot=0 drift=0.2520817518234253 bound=514.9644789836602 beta=0.031992267817258835 accs={0: 0.834, 1: 0.825}
+  [cka] task 2: action=merge slot=0 drift=0.5032012462615967 bound=967.2652290239857 beta=0.06034933030605316 accs={0: 0.559, 1: 0.635, 2: 0.877}
+  [cka] task 3: action=merge slot=0 drift=0.11391735076904297 bound=1041.98123962502 beta=0.1435883492231369 accs={0: 0.534, 1: 0.535, 2: 0.759, 3: 0.875}
+  [cka] task 4: action=merge slot=0 drift=0.17604178190231323 bound=1425.3028358014853 beta=0.02536150999367237 accs={0: 0.541, 1: 0.632, 2: 0.672, 3: 0.845, 4: 0.771}
+== arm spectral (active=['bound']) ==
+  [spectral] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.888}
+  [spectral] task 1: action=merge slot=0 drift=0.2520817518234253 bound=514.9644789836602 beta=0.031992267817258835 accs={0: 0.834, 1: 0.825}
+  [spectral] task 2: action=merge slot=0 drift=0.5032012462615967 bound=967.2652290239857 beta=0.06034933030605316 accs={0: 0.559, 1: 0.635, 2: 0.877}
+  [spectral] task 3: action=merge slot=0 drift=0.11391735076904297 bound=1041.98123962502 beta=0.1435883492231369 accs={0: 0.534, 1: 0.535, 2: 0.759, 3: 0.875}
+  [spectral] task 4: action=isolate slot=1 drift=0.17604178190231323 bound=1425.3028358014853 beta=0.02536150999367237 accs={0: 0.534, 1: 0.535, 2: 0.759, 3: 0.875, 4: 0.748}
+== arm beta (active=['beta']) ==
+  [beta] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.888}
+  [beta] task 1: action=merge slot=0 drift=0.2520817518234253 bound=514.9644789836602 beta=0.031992267817258835 accs={0: 0.834, 1: 0.825}
+  [beta] task 2: action=merge slot=0 drift=0.5032012462615967 bound=967.2652290239857 beta=0.06034933030605316 accs={0: 0.559, 1: 0.635, 2: 0.877}
+  [beta] task 3: action=isolate slot=1 drift=0.11391735076904297 bound=1041.98123962502 beta=0.1435883492231369 accs={0: 0.559, 1: 0.635, 2: 0.877, 3: 0.848}
+  [beta] task 4: action=merge slot=0 drift=0.2569888234138489 bound=1105.0255245820154 beta=0.13622929155826569 accs={0: 0.721, 1: 0.585, 2: 0.82, 3: 0.848, 4: 0.778}
+== arm triplet (active=['drift', 'bound', 'beta']) ==
+  [triplet] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.888}
+  [triplet] task 1: action=merge slot=0 drift=0.2520817518234253 bound=514.9644789836602 beta=0.031992267817258835 accs={0: 0.834, 1: 0.825}
+  [triplet] task 2: action=merge slot=0 drift=0.5032012462615967 bound=967.2652290239857 beta=0.06034933030605316 accs={0: 0.559, 1: 0.635, 2: 0.877}
+  [triplet] task 3: action=isolate slot=1 drift=0.11391735076904297 bound=1041.98123962502 beta=0.1435883492231369 accs={0: 0.559, 1: 0.635, 2: 0.877, 3: 0.848}
+  [triplet] task 4: action=merge slot=0 drift=0.2569888234138489 bound=1105.0255245820154 beta=0.13622929155826569 accs={0: 0.721, 1: 0.585, 2: 0.82, 3: 0.848, 4: 0.778}
+== summary ==
+    baseline: F=0.1550 acc=0.6922 merge=5 iso=0 forced=0 switch=0.00 cost_ratio=21.394 params=3412490
+         cka: F=0.1550 acc=0.6922 merge=5 iso=0 forced=0 switch=0.00 cost_ratio=11.058 params=3412490
+    spectral: F=0.1524 acc=0.6902 merge=4 iso=1 forced=0 switch=0.25 cost_ratio=11.193 params=3412490
+        beta: F=0.0928 acc=0.7504 merge=4 iso=1 forced=0 switch=0.50 cost_ratio=11.544 params=3412490
+     triplet: F=0.0928 acc=0.7504 merge=4 iso=1 forced=0 switch=0.50 cost_ratio=10.714 params=3412490
+# wrote results\cifar-metrics.json (runs=2)

@@ -173,9 +173,10 @@ def main():
                     if isinstance(e, dict) and "f1_detrended" in e)
                 for arm in arms),
             "max_abs_pooled": max(
-                abs(e["pooled_rho"]) for arm in arms
-                for e in corr_report[arm].values()
-                if isinstance(e, dict) and "pooled_rho" in e),
+                (abs(e["pooled_rho"]) for arm in arms
+                 for e in corr_report[arm].values()
+                 if isinstance(e, dict) and "pooled_rho" in e),
+                default=0.0),
         },
         "F2": {
             "triggered": any(t["switch_max"] > 0.3 for t in table.values()),
@@ -203,10 +204,13 @@ def main():
 
     # ---- markdown 表
     L = []
-    L.append("# Phase 1 pilot 聚合结果（T=10 × 5 臂 × 5 种子，width 64 校准版）")
+    phase = runs[0]["config"]["phase"]
+    phase_cn = "Phase 2 Split-CIFAR10" if phase == "cifar" else "Phase 1 pilot"
+    log_stem = "cifar-seed" if phase == "cifar" else "pilot-v2-seed"
+    L.append(f"# {phase_cn} 聚合结果（T={runs[0]['config']['T']} × {len(arms)} 臂 × {len(seeds)} 种子）")
     L.append("")
     L.append(f"- seeds: {seeds} ｜ 配置: {json.dumps({k: v for k, v in runs[0]['config'].items() if k in ('phase','T','width','steps','k','drift','noise','anchor_n','slots','tau_hi','band')}, ensure_ascii=False)}")
-    L.append(f"- 复现: `PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed 0..4 --out results/pilot-metrics.json --log results/pilot-v2-seed<N>.log`")
+    L.append(f"- 复现: `PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase {phase} --seed {','.join(map(str, seeds))} --out {args.inp} --log results/{log_stem}<N>.log`")
     L.append(f"- 分析: `PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_pilot.py`")
     L.append("")
     L.append("## 每臂汇总表")
