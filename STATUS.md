@@ -53,8 +53,8 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
     PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_pilot.py   # 聚合+判读
 
 ## git
-- 本地仓库 main 分支，今晚 4+ commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
-  校准 v2 8573eb5 / pilot 结果待提交），未推送
+- 本地仓库 main 分支，今晚 5 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
+  校准 v2 8573eb5 / pilot 结果+文档 119d61a），未推送
 
 ## 下一步（next_units）
 1. **F2 重设计 + pilot 重跑**（预注册 F2 触发后的必经步）：bound 趋势性导致 z 振荡，
