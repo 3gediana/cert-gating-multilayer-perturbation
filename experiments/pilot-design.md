@@ -107,7 +107,7 @@ action=merge。槽位耗尽 → 强制 merge（记 forced）。hysteresis：上�
 |---|---|---|---|
 | 0（smoke） | 合成 T=5，width 64，5 臂 | 管线验证：三量可算、门控可动、遗忘可测、metrics 落盘 | — | ✅ 完成 |
 | 1（pilot） | 合成 T=10，width 64（校准 v2，width 256 已否决见下），5 臂 × 5 种子 | 主判据初判 + F1 检查 | Phase 0 通过 | ✅ 完成：主判据未达（F3 路径），F1 未触发，F2/F5 触发，见 results/pilot-summary.md |
-| 2 | Split-CIFAR10 子集，3 种子 | 分布迁移验证 | F1 未触发（已满足） | 待做 |
+| 2 | Split-CIFAR10 子集，3 种子 | 分布迁移验证 | F1 未触发（已满足） | ✅ 完成（2026-10-22）：F1 存活（max|ρ|=0.60）；**次判据①不跨分布**（门控有效性符号翻转：seed1 −40% vs seed2 +34%，ΔF̄ CI 含 0，spectral 均 F 反超 baseline）；主判据未达（F3 延续，triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）。门控有效性对数据分布敏感——合成显著性不可外推图像，见 results/cifar-summary.md |
 | 3 | 合成 T=50 | 长序列预测验证 | F1 未触发 + F2 修复 | 待做 |
 
 **Phase 1 难度校准（2026-10-22 拍板）**：原定 width 256 在 pilot 规模下 baseline 遗忘

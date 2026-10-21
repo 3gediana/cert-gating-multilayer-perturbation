@@ -37,3 +37,11 @@
 - F2 触发（spectral/triplet switch 0.49/0.67 >0.3）：根因假设 bound 随任务序号单调增长 + RunningZ 全历史均值滞后 → 边界穿越振荡；hysteresis band 0.3 太窄。按预注册"重设计后再判"——下一单元先修（去趋势 z / 提 τ / 持续期平滑三候选），验收 switch<0.3 且 F 不劣化。
 - F5 触发（cost ~0.35 >0.2，SVD 主导）：触发成本随 T 超线性（J 覆盖全部锚任务 ~O(T²m²P) vs 训练 O(T·steps)）；width 256 时 1.5+。必须作为可扩展性缺陷报告（taste 雷②）。
 - 工程坑记录：校准覆盖参数初版 width 按 float 传入 nn.Linear 报 TypeError（width/k/steps 必须 int）——已修。
+
+## [2026-10-22] Phase 2 判读（Split-CIFAR10 3 种子，width 256）
+- F1 存活：max|ρ| 原始 0.6014（bound~beta，beta/triplet 臂）；去趋势最大 −0.8811（drift~beta，n=12 小样本噪声大，未越 0.9 线）——三量在图像上仍可分离，H 未驳倒。但余量比 pilot（0.68 / <0.35）变薄。
+- **次判据①不跨分布**：triplet vs baseline ΔF̄=+0.0129（CI95 [−0.0234,+0.0622] 含 0；1 胜 1 负 1 平）；spectral 均 F 0.1190 > baseline 0.1121（门控反而略差）；seed1 beta/triplet −40%（0.1550→0.0928）vs seed2 +34%（0.0698→0.0932）符号翻转。合成上 5/5 一致 −41%（CI 不含 0）的显著性在图像分布上不保持——**门控有效性对数据分布敏感**，合成基准显著性不可外推到图像。
+- 主判据未达（F3 路径延续）：triplet 与 beta 动作序列 3/3 种子全同（ΔF=0）；vs spectral Δ=0.0199（CI 含 0）；vs cka/baseline Δ≈0.013（CI 含 0）。
+- 触发结构（新事实）：drift 通道 0/27 决策点告警（z 恒 ≤0——MLP trunk 跨任务表征随序列训练变稳，与合成旋转冲突结构相反）；6 次告警全部来自 task3/4 的 bound 或 beta 尖峰（z 2.5-7.9）；隔离收益取决于隔离槽训练充分度（100 步×2000 样本在图像上欠拟合 → seed2 回滚+重训反噬 +34%）。
+- F5 严重：稳态 cost_ratio ≈ 11×（P=3.4M 是合成 31K 的 110×）；baseline 臂首调 ~22×（首次 cuSOLVER/分配器开销，3 种子一致，根因未定位）。论文必须报告（taste 雷②）。
+- 工程记录：CIFAR 官方源 ~60KB/s（301→cave.cs.toronto.edu）；HF 镜像 datasets/fffan/Temp ~12MB/s 但为 ZIP（内含 Cifar10/cifar-10-batches-py）——预置解压后 torchvision 完整性校验通过（校验对象是解压文件 md5 而非 tar，CIFAR10(download=False) 可用）。
