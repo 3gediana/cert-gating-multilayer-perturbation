@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tasks import make_task_sequence, make_split_cifar
 from model import SlotsModel
 from triggers import linear_cka, anchor_jacobians, spectral_bound, subspace_leakage
-from gating import CHANNELS, RunningZ, TrendAdjustedZ, decide
+from gating import CHANNELS, RunningZ, TrendAdjustedZ, RobustZ, EWMAZ, decide
 
 ARMS = {
     "baseline": [],
@@ -86,17 +86,32 @@ def train_steps(model, group, task, slot, head, device, steps, batch, lr):
 
 
 def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log,
-            f2_fix="none", persist=1):
+            f2_fix="none", persist=1, k_in=None, k_out=None, ewma_alpha=0.3):
     torch.manual_seed(seed)
     np.random.seed(seed)
     model = SlotsModel(cfg["d"], cfg["width"], cfg["k"], cfg["T"], cfg["slots"]).to(device)
     active = ARMS[arm_name]
     assignments = [0] * cfg["T"]
     free_slots = list(range(1, cfg["slots"]))
-    # F2 修复候选 detrend：去趋势 z（其余规则用原 RunningZ）
-    ZCls = TrendAdjustedZ if f2_fix == "detrend" else RunningZ
-    zstats = {c: ZCls() for c in CHANNELS}
+    # F2 修复候选（预注册见 gating.py 模块 docstring / notes/DECISIONS.md）：
+    # none/persist/asym → RunningZ；detrend → 全通道 TrendAdjustedZ；
+    # detrend-bound → 仅 bound 去趋势（drift/beta 保持原始 z）；robust → 中位数/MAD；
+    # ewma → EWMA z（alpha 可调）。
+    if f2_fix == "detrend-bound":
+        zstats = {"drift": RunningZ(), "bound": TrendAdjustedZ(), "beta": RunningZ()}
+    elif f2_fix == "detrend":
+        zstats = {c: TrendAdjustedZ() for c in CHANNELS}
+    elif f2_fix == "robust":
+        zstats = {c: RobustZ() for c in CHANNELS}
+    elif f2_fix == "ewma":
+        zstats = {c: EWMAZ(alpha=ewma_alpha) for c in CHANNELS}
+    else:
+        zstats = {c: RunningZ() for c in CHANNELS}
     rule = {"f2_fix": f2_fix, "tau_hi": tau_hi, "band": band, "persist": persist}
+    if f2_fix == "asym":
+        rule["k_in"], rule["k_out"] = k_in, k_out
+    if f2_fix == "ewma":
+        rule["ewma_alpha"] = ewma_alpha
     deltas = []
     feats_cache = {}
     eval_hist = []
@@ -151,7 +166,10 @@ def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log,
             for c in CHANNELS:
                 zs[c] = zstats[c].z(i, raws[c])
             action, max_z, override, gate_state = decide(
-                zs, active, prev_action, tau_hi, band, persist, gate_state)
+                zs, active, prev_action, tau_hi, band, persist,
+                k_in=k_in if f2_fix == "asym" else None,
+                k_out=k_out if f2_fix == "asym" else None,
+                state=gate_state)
 
         if action == "isolate":
             if free_slots:
@@ -251,13 +269,23 @@ def main():
     ap.add_argument("--log", default="results/smoke-log.txt")
     ap.add_argument("--tau-hi", type=float, default=2.0)
     ap.add_argument("--band", type=float, default=0.3)
-    # F2 修复候选（预注册三候选，见 gating.py 模块 docstring / DECISIONS.md
-    # 2026-10-22 条）：none=原规则（回归对照）/ detrend=去趋势 z /
-    # persist=动作持续期平滑（连续 persist 个边界确认才切换）；tau 提高用
-    # --tau-hi 传（阈值类修法只作敏感性分析，见 workflow.json 约定）
+    # F2 修复候选（预注册见 gating.py 模块 docstring / notes/DECISIONS.md）：
+    # none=原规则（回归对照）/ detrend=全通道去趋势 z /
+    # detrend-bound=仅 bound 通道去趋势（drift/beta 保持原始 z）/
+    # persist=动作持续期平滑（连续 persist 个边界确认才切换）/
+    # asym=非对称持续期（进 isolate 需连续 k-in 告警、退需连续 k-out 不告警）/
+    # robust=中位数/MAD 稳健 z / ewma=EWMA z（--ewma-alpha）。
+    # tau 提高用 --tau-hi 传（阈值类修法只作敏感性分析，见 workflow.json 约定）。
     ap.add_argument("--f2-fix", default="none",
-                    choices=["none", "detrend", "persist"])
+                    choices=["none", "detrend", "detrend-bound", "persist",
+                             "asym", "robust", "ewma"])
     ap.add_argument("--persist", type=int, default=2)
+    ap.add_argument("--k-in", type=int, default=2,
+                    help="asym：进 isolate 需连续告警边界数（预注册=2）")
+    ap.add_argument("--k-out", type=int, default=3,
+                    help="asym：退 isolate 需连续不告警边界数（预注册=3）")
+    ap.add_argument("--ewma-alpha", type=float, default=0.3,
+                    help="ewma：指数加权 alpha（预注册=0.3）")
     ap.add_argument("--device", default="auto")
     # 难度校准覆盖（pilot-design.md §4 要求 baseline 遗忘非零才有效度；
     # 宽度提升会压掉遗忘，这些覆盖只用于校准扫描，校准结果拍板后烘焙进 PHASES）
@@ -283,7 +311,9 @@ def main():
 
     log(f"# run phase={args.phase} seed={args.seed} device={device} torch={torch.__version__}")
     log(f"# rule: f2_fix={args.f2_fix} persist={args.persist} "
-        f"tau_hi={args.tau_hi} band={args.band}")
+        f"tau_hi={args.tau_hi} band={args.band}"
+        + (f" k_in={args.k_in} k_out={args.k_out}" if args.f2_fix == "asym" else "")
+        + (f" ewma_alpha={args.ewma_alpha}" if args.f2_fix == "ewma" else ""))
     log(f"# config={json.dumps(cfg, ensure_ascii=False)}")
 
     if args.phase == "cifar":
@@ -322,7 +352,8 @@ def main():
         log(f"== arm {arm} (active={ARMS[arm]}) ==")
         arms_out.append(run_arm(arm, tasks, cfg, args.seed, device,
                                 args.tau_hi, args.band, log,
-                                args.f2_fix, args.persist))
+                                args.f2_fix, args.persist,
+                                args.k_in, args.k_out, args.ewma_alpha))
     total = time.perf_counter() - t0
 
     log("== summary ==")

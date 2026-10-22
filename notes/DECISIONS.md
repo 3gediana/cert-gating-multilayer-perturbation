@@ -86,3 +86,45 @@
   k=2 规则、switch_max 0.44 作限制报告。
 - 工程记录：f2_fix=persist 与 none+--persist 行为等价（别名，旧版分析标签碰撞会静默
   覆盖单元——标签必须含 persist 轴）；write_file 拒覆盖已读文件时经 scratch+cp 落盘。
+
+## [2026-10-23] F2 修复第二轮预注册（experiment-redesign-2）：候选④集 + 验收 gate（跑前冻结）
+- 背景：轮次 1（commit d767fc2）三候选 6/6 未过 gate。从 round-1 归档 records 读出的
+  机制（候选设计依据，非本轮新数据）：①告警是单边界尖峰——z 跳 >τ 一个任务后回落到
+  ~1-1.5 → 动作序列 i,m,i,m 振荡；②连续 isolate 边界各占一个槽位（T=10 仅 3 槽）→
+  粘性规则会加速槽位耗尽、forced merge 反制造 switch（seed2/persist k=2 的 max 0.44
+  部分源于此——t9 是 forced merge 而非规则切换）；③detrend 失败=直接统计效应（drift
+  原始 z 恒负、去趋势后晚期残差转正→越界）+ 动作路径效应。
+- 候选④集（参数全部跑前冻结；本单元内任何调参都违反预注册——要改只能作为新一轮
+  预注册另开单元）：
+  1. `asym`（④a 非对称持续期）：进 isolate 需连续 k_in=2 告警、退需连续 k_out=3 不告警
+     （RunningZ / tau2 / band0.3 / persist=1）。假设：振荡主因"进易退易"——放慢退出、
+     进入保持 2（保 k=2 的 F 灵敏度）。预测：switch 低于 persist k=2（0.27/0.44）、
+     F̄≈k=2 水平（~0.033）；风险：粘性 isolate 加速槽位耗尽 → forced merge。
+  2. `none/p1/b0.5`（④a' 加宽 hysteresis band 0.3→0.5）。假设：band 内维持 isolate
+     可吸收尖峰后回落。预测：无效或边际（round-1 多数 override 点 z<1.5）；风险：
+     override 与槽位耗尽碰撞（seed2 控制组 t8 已见 m*h）。
+  3. `robust`（④b 稳健 z=median/MAD；min 3 样本；MAD=0 时用相对中位数地板防除零）。
+     假设：中位数/MAD 对 ramp 末端不敏感 → 晚期持续越界消除。预测：告警减少、F̄ 向
+     baseline 回落（早期尖峰也被钝化——seed2 t3 z 3.74→~0.9 量级）；风险：丢 F。
+  4. `ewma`（④b' EWMA z；alpha=0.3；偏差修正方差；min 3 样本）。假设：局部自适应均值
+     =隐式去趋势——只对局部水平偏离告警、不做全局去趋势 → 不直接激活 drift/beta
+     （针对 detrend 全通道激活的失败机制）。预测：告警局部化、晚期不再持续越界；
+     风险：纯 ramp 上稳态 z≈2.4 贴 τ=2 → 可能出现新的贴线振荡。
+  5. `detrend-bound`（④c 混合）：仅 bound 通道 TrendAdjustedZ，drift/beta 保持 RunningZ。
+     假设：只修有趋势问题的 bound 通道、drift 保持"原始 z 恒负不告警" → 不重演 detrend
+     的全通道激活。预测：bound 振荡修复且 drift/beta 不直接越界；风险：动作路径效应
+     仍改变 drift/beta raws（round-1 detrend 见 drift 7-11/40、beta 11-14/40 越界）。
+- 同批对照 + 家族上下文（同批配对的前提）：`none/p1/tau2/b0.3`（对照，兼与 round-1
+  归档值逐位复证 GPU 确定性）；`none/p2`、`none/p3`（round-1 两格同批重跑，把 asym
+  放上 persist trade-off 曲线 k=1/2/3 + 2/3 非对称）。
+- 网格：8 个唯一规则单元 × 5 种子 × 5 臂 = 40 runs（pilot T=10 width64 校准版，
+  commit d767fc2 同协议）。产物：results/pilot-f2fix2-metrics.json +
+  results/pilot-f2fix2-seed{0..4}-{ctrl,p2,p3,band,asym,robust,ewma,dtb}.log +
+  experiments/analyze_f2fix2.py 汇总（同口径：标签含全部行为轴/F1 跨种子汇总/
+  switch 双口径）。
+- 验收 gate（不变=workflow.json gate_step + pilot-design.md §7 F2 预注册）：
+  switch<0.3（主口径=per-seed rate 跨种子 max，任一臂；次口径=mean，双口径都判）
+  + F̄≤0.0331（spectral/triplet 归档基准）+ 同批配对每种子 ΔF≤0.005（vs 同批对照）。
+- 判读路径（按 workflow verdict_mapping 预注册）：有候选过 gate → 选为 Phase 3 规则、
+  开 experiment-long（T=50 终判）；全败 → 升级组合决策——降规模选项（k=2 规则 +
+  switch_max 0.44 作限制报告跑 Phase 3）拍板落档本台账（以实测判读为准，跑前不预设）。
