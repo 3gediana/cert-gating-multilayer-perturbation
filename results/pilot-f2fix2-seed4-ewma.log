@@ -1,0 +1,65 @@
+# run phase=pilot seed=4 device=cuda torch=2.10.0+cu128
+# rule: f2_fix=ewma persist=1 tau_hi=2.0 band=0.3 ewma_alpha=0.3
+# config={"T": 10, "d": 30, "k": 10, "train_n": 2000, "test_n": 500, "anchor_n": 64, "width": 64, "steps": 100, "batch": 256, "lr": 0.001, "slots": 4, "noise": 1.0, "drift": 0.5}
+== arm baseline (active=[]) ==
+  [baseline] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.99}
+  [baseline] task 1: action=merge slot=0 drift=0.09082800149917603 bound=170.0821593864821 beta=0.07469194382429123 accs={0: 0.976, 1: 0.994}
+  [baseline] task 2: action=merge slot=0 drift=0.051888465881347656 bound=467.7892005761896 beta=0.055987901985645294 accs={0: 0.962, 1: 0.988, 2: 0.996}
+  [baseline] task 3: action=merge slot=0 drift=0.034749627113342285 bound=457.8079123011703 beta=0.046936146914958954 accs={0: 0.942, 1: 0.958, 2: 0.982, 3: 0.996}
+  [baseline] task 4: action=merge slot=0 drift=0.037564873695373535 bound=573.0151020156336 beta=0.050281867384910583 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992}
+  [baseline] task 5: action=merge slot=0 drift=0.02493417263031006 bound=783.7194932618477 beta=0.05302434414625168 accs={0: 0.912, 1: 0.892, 2: 0.96, 3: 0.954, 4: 0.994, 5: 0.996}
+  [baseline] task 6: action=merge slot=0 drift=0.04015463590621948 bound=1304.9567321701907 beta=0.034279003739356995 accs={0: 0.922, 1: 0.928, 2: 0.938, 3: 0.958, 4: 0.984, 5: 0.986, 6: 0.996}
+  [baseline] task 7: action=merge slot=0 drift=0.014144361019134521 bound=1036.3887014271168 beta=0.048965878784656525 accs={0: 0.894, 1: 0.912, 2: 0.952, 3: 0.938, 4: 0.97, 5: 0.984, 6: 0.998, 7: 0.996}
+  [baseline] task 8: action=merge slot=0 drift=0.01630854606628418 bound=1483.8022002677317 beta=0.027808902785182 accs={0: 0.87, 1: 0.93, 2: 0.944, 3: 0.936, 4: 0.98, 5: 0.984, 6: 0.988, 7: 0.984, 8: 0.996}
+  [baseline] task 9: action=merge slot=0 drift=0.016193091869354248 bound=1661.878029067535 beta=0.04047975689172745 accs={0: 0.858, 1: 0.914, 2: 0.94, 3: 0.882, 4: 0.956, 5: 0.97, 6: 0.98, 7: 0.974, 8: 0.998, 9: 1.0}
+== arm cka (active=['drift']) ==
+  [cka] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.99}
+  [cka] task 1: action=merge slot=0 drift=0.09082800149917603 bound=170.0821593864821 beta=0.07469194382429123 accs={0: 0.976, 1: 0.994}
+  [cka] task 2: action=merge slot=0 drift=0.051888465881347656 bound=467.7892005761896 beta=0.055987901985645294 accs={0: 0.962, 1: 0.988, 2: 0.996}
+  [cka] task 3: action=merge slot=0 drift=0.034749627113342285 bound=457.8079123011703 beta=0.046936146914958954 accs={0: 0.942, 1: 0.958, 2: 0.982, 3: 0.996}
+  [cka] task 4: action=merge slot=0 drift=0.037564873695373535 bound=573.0151020156336 beta=0.050281867384910583 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992}
+  [cka] task 5: action=merge slot=0 drift=0.02493417263031006 bound=783.7194932618477 beta=0.05302434414625168 accs={0: 0.912, 1: 0.892, 2: 0.96, 3: 0.954, 4: 0.994, 5: 0.996}
+  [cka] task 6: action=merge slot=0 drift=0.04015463590621948 bound=1304.9567321701907 beta=0.034279003739356995 accs={0: 0.922, 1: 0.928, 2: 0.938, 3: 0.958, 4: 0.984, 5: 0.986, 6: 0.996}
+  [cka] task 7: action=merge slot=0 drift=0.014144361019134521 bound=1036.3887014271168 beta=0.048965878784656525 accs={0: 0.894, 1: 0.912, 2: 0.952, 3: 0.938, 4: 0.97, 5: 0.984, 6: 0.998, 7: 0.996}
+  [cka] task 8: action=merge slot=0 drift=0.01630854606628418 bound=1483.8022002677317 beta=0.027808902785182 accs={0: 0.87, 1: 0.93, 2: 0.944, 3: 0.936, 4: 0.98, 5: 0.984, 6: 0.988, 7: 0.984, 8: 0.996}
+  [cka] task 9: action=merge slot=0 drift=0.016193091869354248 bound=1661.878029067535 beta=0.04047975689172745 accs={0: 0.858, 1: 0.914, 2: 0.94, 3: 0.882, 4: 0.956, 5: 0.97, 6: 0.98, 7: 0.974, 8: 0.998, 9: 1.0}
+== arm spectral (active=['bound']) ==
+  [spectral] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.99}
+  [spectral] task 1: action=merge slot=0 drift=0.09082800149917603 bound=170.0821593864821 beta=0.07469194382429123 accs={0: 0.976, 1: 0.994}
+  [spectral] task 2: action=merge slot=0 drift=0.051888465881347656 bound=467.7892005761896 beta=0.055987901985645294 accs={0: 0.962, 1: 0.988, 2: 0.996}
+  [spectral] task 3: action=merge slot=0 drift=0.034749627113342285 bound=457.8079123011703 beta=0.046936146914958954 accs={0: 0.942, 1: 0.958, 2: 0.982, 3: 0.996}
+  [spectral] task 4: action=merge slot=0 drift=0.037564873695373535 bound=573.0151020156336 beta=0.050281867384910583 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992}
+  [spectral] task 5: action=isolate slot=1 drift=0.02493417263031006 bound=783.7194932618477 beta=0.05302434414625168 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992, 5: 1.0}
+  [spectral] task 6: action=merge slot=0 drift=0.06653118133544922 bound=807.5666506767775 beta=0.01644337736070156 accs={0: 0.928, 1: 0.928, 2: 0.966, 3: 0.978, 4: 0.99, 5: 1.0, 6: 0.998}
+  [spectral] task 7: action=merge slot=0 drift=0.016504287719726562 bound=780.9949017327017 beta=0.06580466032028198 accs={0: 0.906, 1: 0.92, 2: 0.974, 3: 0.974, 4: 0.972, 5: 1.0, 6: 0.996, 7: 1.0}
+  [spectral] task 8: action=merge slot=0 drift=0.02219855785369873 bound=1044.9883362110704 beta=0.03262094408273697 accs={0: 0.894, 1: 0.93, 2: 0.968, 3: 0.942, 4: 0.972, 5: 1.0, 6: 0.99, 7: 0.982, 8: 0.998}
+  [spectral] task 9: action=merge slot=0 drift=0.02227717638015747 bound=1166.23254203517 beta=0.038924433290958405 accs={0: 0.878, 1: 0.9, 2: 0.954, 3: 0.912, 4: 0.968, 5: 1.0, 6: 0.982, 7: 0.972, 8: 0.998, 9: 0.996}
+== arm beta (active=['beta']) ==
+  [beta] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.99}
+  [beta] task 1: action=merge slot=0 drift=0.09082800149917603 bound=170.0821593864821 beta=0.07469194382429123 accs={0: 0.976, 1: 0.994}
+  [beta] task 2: action=merge slot=0 drift=0.051888465881347656 bound=467.7892005761896 beta=0.055987901985645294 accs={0: 0.962, 1: 0.988, 2: 0.996}
+  [beta] task 3: action=merge slot=0 drift=0.034749627113342285 bound=457.8079123011703 beta=0.046936146914958954 accs={0: 0.942, 1: 0.958, 2: 0.982, 3: 0.996}
+  [beta] task 4: action=merge slot=0 drift=0.037564873695373535 bound=573.0151020156336 beta=0.050281867384910583 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992}
+  [beta] task 5: action=merge slot=0 drift=0.02493417263031006 bound=783.7194932618477 beta=0.05302434414625168 accs={0: 0.912, 1: 0.892, 2: 0.96, 3: 0.954, 4: 0.994, 5: 0.996}
+  [beta] task 6: action=merge slot=0 drift=0.04015463590621948 bound=1304.9567321701907 beta=0.034279003739356995 accs={0: 0.922, 1: 0.928, 2: 0.938, 3: 0.958, 4: 0.984, 5: 0.986, 6: 0.996}
+  [beta] task 7: action=merge slot=0 drift=0.014144361019134521 bound=1036.3887014271168 beta=0.048965878784656525 accs={0: 0.894, 1: 0.912, 2: 0.952, 3: 0.938, 4: 0.97, 5: 0.984, 6: 0.998, 7: 0.996}
+  [beta] task 8: action=merge slot=0 drift=0.01630854606628418 bound=1483.8022002677317 beta=0.027808902785182 accs={0: 0.87, 1: 0.93, 2: 0.944, 3: 0.936, 4: 0.98, 5: 0.984, 6: 0.988, 7: 0.984, 8: 0.996}
+  [beta] task 9: action=merge slot=0 drift=0.016193091869354248 bound=1661.878029067535 beta=0.04047975689172745 accs={0: 0.858, 1: 0.914, 2: 0.94, 3: 0.882, 4: 0.956, 5: 0.97, 6: 0.98, 7: 0.974, 8: 0.998, 9: 1.0}
+== arm triplet (active=['drift', 'bound', 'beta']) ==
+  [triplet] task 0: action=merge slot=0 drift=None bound=None beta=None accs={0: 0.99}
+  [triplet] task 1: action=merge slot=0 drift=0.09082800149917603 bound=170.0821593864821 beta=0.07469194382429123 accs={0: 0.976, 1: 0.994}
+  [triplet] task 2: action=merge slot=0 drift=0.051888465881347656 bound=467.7892005761896 beta=0.055987901985645294 accs={0: 0.962, 1: 0.988, 2: 0.996}
+  [triplet] task 3: action=merge slot=0 drift=0.034749627113342285 bound=457.8079123011703 beta=0.046936146914958954 accs={0: 0.942, 1: 0.958, 2: 0.982, 3: 0.996}
+  [triplet] task 4: action=merge slot=0 drift=0.037564873695373535 bound=573.0151020156336 beta=0.050281867384910583 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992}
+  [triplet] task 5: action=isolate slot=1 drift=0.02493417263031006 bound=783.7194932618477 beta=0.05302434414625168 accs={0: 0.924, 1: 0.908, 2: 0.982, 3: 0.988, 4: 0.992, 5: 1.0}
+  [triplet] task 6: action=merge slot=0 drift=0.06653118133544922 bound=807.5666506767775 beta=0.01644337736070156 accs={0: 0.928, 1: 0.928, 2: 0.966, 3: 0.978, 4: 0.99, 5: 1.0, 6: 0.998}
+  [triplet] task 7: action=merge slot=0 drift=0.016504287719726562 bound=780.9949017327017 beta=0.06580466032028198 accs={0: 0.906, 1: 0.92, 2: 0.974, 3: 0.974, 4: 0.972, 5: 1.0, 6: 0.996, 7: 1.0}
+  [triplet] task 8: action=merge slot=0 drift=0.02219855785369873 bound=1044.9883362110704 beta=0.03262094408273697 accs={0: 0.894, 1: 0.93, 2: 0.968, 3: 0.942, 4: 0.972, 5: 1.0, 6: 0.99, 7: 0.982, 8: 0.998}
+  [triplet] task 9: action=merge slot=0 drift=0.02227717638015747 bound=1166.23254203517 beta=0.038924433290958405 accs={0: 0.878, 1: 0.9, 2: 0.954, 3: 0.912, 4: 0.968, 5: 1.0, 6: 0.982, 7: 0.972, 8: 0.998, 9: 0.996}
+== summary ==
+    baseline: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.405 params=31076
+         cka: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.380 params=31076
+    spectral: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.403 params=31076
+        beta: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.366 params=31076
+     triplet: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.397 params=31076
+# wrote results\pilot-f2fix2-metrics.json (runs=35)

@@ -374,6 +374,13 @@ def main():
         "wall_sec": round(total, 2),
         "arms": arms_out,
     }
+    # 行为轴必须进 config（轮次 1 教训：标签缺轴会静默合并/错标单元）——
+    # k_in/k_out（asym）与 ewma_alpha（ewma）只在相应规则下记录。
+    if args.f2_fix == "asym":
+        run_record["config"]["k_in"] = args.k_in
+        run_record["config"]["k_out"] = args.k_out
+    if args.f2_fix == "ewma":
+        run_record["config"]["ewma_alpha"] = args.ewma_alpha
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if out_path.exists():

@@ -1,8 +1,8 @@
 # 状态
 
-- 阶段：experiment-redesign 完成（F2 修复判读落档：预注册三候选 6/6 未过验收 gate → 转 redesign；H1 仍未决——F3 长序列路径未走，Phase 3 待合格规则）
-- 最近更新：2026-10-23（experiment-redesign 单元：F2 修复实验补跑 14 runs 凑齐网格（共 40 runs）+ 分析脚本重写（persist 轴进标签/预注册 F1 口径/双口径 switch）+ 判读落档 DECISIONS；详见下节）
-- 收尾恢复点（2026-10-23 07:34，wrap 单元收线）：断点=experiment-redesign 完成（d767fc2/9535f06），**experiment-redesign-redesign（F2 修复第二轮）已开跑**（本恢复点写入后被并行会话接手：DECISIONS 候选④台账 07:32 冻结、代码就位、seed0 scratch 跑动中——驱动器日志未见 unit-start，疑似异步会话；其 WIP 未提交是有意保留，勿代提交）；夜队列已空。明夜驱动器从 workflow ready 阶段接管：**先按 DECISIONS 候选④集写预注册台账再跑**（防事后调参），验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。publish（gh 建公开仓+push）仍为遗留单元，授权已激活未执行。
+- 阶段：experiment-redesign-2 完成（F2 修复第二轮 40 runs 判读落档：候选④集 7/7 双口径 FAIL → 转 redesign-3 或组合拍板；asym 最近线——switch/F̄ 双过但卡配对单种子）
+- 最近更新：2026-10-23 07:55（wrap 单元：f2fix2 40/40 收完 + 聚合判读落盘）
+- 收尾恢复点（2026-10-23 07:55，wrap 收线）：experiment-redesign-2 **40/40 runs 完成（736.9s，skipped 0）+ analyze_f2fix2 判读落盘 results/pilot-f2fix2-summary.{md,json}**。判读：7/7 候选主/次口径全 FAIL（预注册 gate 三条件）；**asym（④a 非对称 i2o3）最近线**——switch 0.22/0.22 全种子一致、F̄ 0.0304≤0.0331、4/5 种子配对改善（Δ=-0.007~-0.010），仅 seed4 ΔF=+0.0110>PAIR_TOL 0.005 触发 paired_not_worse=false；对照 none/p1/tau2/b0.3 逐位复证轮次 1（sw 0.49/0.67、F̄ 0.0331）。明夜三选一：(a) redesign-3 新预注册（asym 变体，或论证放宽 PAIR_TOL——后者=改 gate，须显式拍板防 p-hacking）；(b) 组合拍板降规模（asym + switch_max 0.22 作限制报告 → 放行 Phase 3）；(c) 跳过 gate 直跑 experiment-long（前置未满足，不推荐）。publish 已完成：origin/main 推至 afa4abd（07:49 通道恢复后成功），本单元 commits 随后推送。
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物
@@ -144,11 +144,9 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   **experiment-redesign 完成 d767fc2**）；2026-10-23 07:39 wrap 单元已建公开仓并推送：https://github.com/3gediana/cert-gating-multilayer-perturbation（origin/main，12 commits）
 
 ## 下一步（workflow 管线）
-- **ready：experiment-redesign-2（F2 修复第二轮）**——预注册候选④集（先写 DECISIONS 再跑，
-  防事后调参）：a) 非对称持续期（进 isolate k=2/退 k=3）或加宽 hysteresis band；
-  b) 稳健 z（median/MAD）或 EWMA z（隐式去趋势、不激活全部通道）；c) 混合：仅 bound
-  通道去趋势。验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。
-  产物 results/pilot-f2fix2-*。~35min
+- **experiment-redesign-3 或组合拍板（三选一，见 07:55 恢复点）**：asym 是 7 候选中唯一
+  switch/F̄ 双过线的，卡点=配对条款单种子 seed4（+0.0110>0.005）。改 PAIR_TOL=改 gate 须
+  显式拍板；降规模路径（b）与轮次 1 的 k=2 降规模同性质。
 - **experiment-long（Phase 3）前置未满足**：F2 修复无候选过预注册 gate → 待 redesign-2
   产出合格规则；或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后启动。
   T=50 长序列"长序列才显著"预测 + 三元组增量复判 = H1 终判（F3 预注册：仍无增益则驳倒）。~45-80min
