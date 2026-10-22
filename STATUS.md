@@ -1,10 +1,13 @@
 # 状态
 
-- 阶段：Phase 2 完成（F3 路径延续，F2 规则修复待做）
-- 最近更新：2026-10-23（组合统筹单元：队列重建+stage 行归一；研究内容无变化，读数见下）
+- 阶段：active/design（workflow.json 已登记，准入成立；研究实质：Phase 2 完成，F3 延续+F2 修复待做——管线 ready 阶段 experiment-redesign）
+- 最近更新：2026-10-23（design 单元：workflow.json 登记预注册协议+已完阶段回执，STATUS 标 active/design；研究内容无变化，读数见下）
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物
+- `workflow.json`——**生产管线登记（2026-10-23 design 单元）**：H1/预测/F1-F5（只引用
+  pilot-design.md §7 预注册，不重定义）/最小可判别实验（F2 修复 gate + Phase 3 T=50 终判）/
+  完成文件/各阶段回执（Phase 1、2 真实结果 backfill，source_mode=live）
 - `experiments/pilot-design.md`——五臂协议 + 三量操作化 + 预注册判读标准 + 失败条件 F1-F5
 - `experiments/{tasks,model,triggers,gating,train}.py`——训练主循环（pilot 难度已校准 v2）
 - `experiments/analyze_pilot.py`——Phase 1 聚合分析（遗忘表/F1 跨种子相关/配对 bootstrap/
@@ -100,13 +103,16 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
   5a5aeae / Phase 2 判读落档 24f42c2），未推送
 
-## 下一步（next_units）
-1. **F2 重设计 + pilot 重跑**（Phase 1 遗留，预注册必经步）：bound 趋势性导致 z 振荡，
-   候选：对 bound 去趋势/提高 τ/动作持续期平滑；验收：switch<0.3 且 F 不劣化。~35min
-2. **图像门控重设计（Phase 2 负结果后续）**：候选——τ 分布校准（只能作敏感性分析报告，
-   防事后调参）/ 尖峰持续期确认（连续边界告警才切）/ 隔离槽步数随任务规模放大；验收：图像上
-   门控效果符号一致且不显著劣化于 baseline。~45min
-3. Phase 3：合成 T=50 长序列（F2 修复后）——"长序列才显著"预测 + 三元组增量复判。~45min
+## 下一步（workflow 管线，2026-10-23 design 单元起接管）
+- **ready：experiment-redesign**——F2 规则修复（预注册必经步）：bound 趋势性导致 z 振荡，
+  候选：对 bound 去趋势/提高 τ/动作持续期平滑；验收：switch<0.3 且 F 不劣化于 0.0331，
+  产物 results/pilot-f2fix-*。~35min
+- 后接 **experiment-long（Phase 3）**：合成 T=50 长序列（F2 修复后）——"长序列才显著"
+  预测 + 三元组增量复判 = H1 终判（F3 预注册：仍无增益则驳倒）。~45-80min
+- 图像门控候选修法（τ 分布校准=敏感性分析报告，防事后调参/尖峰持续期确认/隔离槽步数
+  放大）随 experiment-redesign 同轮验证，不改预注册主判据。
+- 遗留独立单元：gh 建公开仓库+push 全部本地 commits（publish=github-push 已授权），
+  remote 记入 notes/。~15min
 
 ## 阻塞
 - 无（F2 与图像触发惰性均为规则层问题，有明确根因假设与候选修法）

@@ -45,3 +45,8 @@
 - 触发结构（新事实）：drift 通道 0/27 决策点告警（z 恒 ≤0——MLP trunk 跨任务表征随序列训练变稳，与合成旋转冲突结构相反）；6 次告警全部来自 task3/4 的 bound 或 beta 尖峰（z 2.5-7.9）；隔离收益取决于隔离槽训练充分度（100 步×2000 样本在图像上欠拟合 → seed2 回滚+重训反噬 +34%）。
 - F5 严重：稳态 cost_ratio ≈ 11×（P=3.4M 是合成 31K 的 110×）；baseline 臂首调 ~22×（首次 cuSOLVER/分配器开销，3 种子一致，根因未定位）。论文必须报告（taste 雷②）。
 - 工程记录：CIFAR 官方源 ~60KB/s（301→cave.cs.toronto.edu）；HF 镜像 datasets/fffan/Temp ~12MB/s 但为 ZIP（内含 Cifar10/cifar-10-batches-py）——预置解压后 torchvision 完整性校验通过（校验对象是解压文件 md5 而非 tar，CIFAR10(download=False) 可用）。
+
+## [2026-10-23] workflow 管线登记（candidate-design 单元）：准入成立，判据权归预注册
+- 驱动器 06:17 派发 candidate-design（快权重课题 stop 后队列空，落到本课题）：workflow.json 登记 H1/预测/失败条件/最小可判别实验/完成文件，STATUS 标 active/design。准入显然成立（Phase 0-2 真实结果在盘、F3 预注册路径未走完、组合 2/3 项目）→ next_action=continue。
+- 关键拍板：workflow.json 对 F1-F5 只**引用** pilot-design.md §7 预注册、不重定义阈值——PORTFOLIO 04:59 记录的「泛化 workflow 抢占预注册协议」担忧以"引用而非重写"落进 schema。管线 ready 阶段=experiment-redesign（F2 修复三候选，验收 switch<0.3 且 F̄ 不劣化 0.0331），后接 experiment-long（Phase 3 T=50 终判）。
+- 图像触发惰性的修法（τ 分布校准/尖峰持续期确认/隔离槽步数放大）随 F2 修复同轮验证，但 τ 分布校准只能作敏感性分析报告——不得事后调参改预注册主判据。
