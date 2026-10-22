@@ -137,9 +137,10 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
       --json results/pilot-f2fix-summary.json   # F2 修复验收判读
 
 ## git
-- 本地仓库 main 分支，今晚 7 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
+- 本地仓库 main 分支，今晚 8 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
   校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
-  5a5aeae / Phase 2 判读落档 24f42c2），未推送
+  5a5aeae / Phase 2 判读落档 24f42c2 / design 管线登记 1ea4ba2 /
+  **experiment-redesign 完成 d767fc2**），未推送
 
 ## 下一步（workflow 管线）
 - **ready：experiment-redesign-2（F2 修复第二轮）**——预注册候选④集（先写 DECISIONS 再跑，
