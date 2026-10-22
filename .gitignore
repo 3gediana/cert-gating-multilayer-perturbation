@@ -18,3 +18,6 @@ data/
 Thumbs.db
 
 # 注意：results/metrics.json 与 results/smoke-log.txt 是小体积实验证据，纳入版本控制
+
+# 运行时探针脚本（非课题产物，不入库；沿用快权重课题 7b3f50a 先例）
+experiments/_probe_*.py

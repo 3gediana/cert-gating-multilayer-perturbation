@@ -2,6 +2,7 @@
 
 - 阶段：experiment-redesign 完成（F2 修复判读落档：预注册三候选 6/6 未过验收 gate → 转 redesign；H1 仍未决——F3 长序列路径未走，Phase 3 待合格规则）
 - 最近更新：2026-10-23（experiment-redesign 单元：F2 修复实验补跑 14 runs 凑齐网格（共 40 runs）+ 分析脚本重写（persist 轴进标签/预注册 F1 口径/双口径 switch）+ 判读落档 DECISIONS；详见下节）
+- 收尾恢复点（2026-10-23 07:34，wrap 单元收线）：断点=experiment-redesign 完成（d767fc2/9535f06），**experiment-redesign-redesign（F2 修复第二轮）ready 未开跑**；夜队列已空。明夜驱动器从 workflow ready 阶段接管：**先按 DECISIONS 候选④集写预注册台账再跑**（防事后调参），验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。publish（gh 建公开仓+push）仍为遗留单元，授权已激活未执行。
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物

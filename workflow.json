@@ -2,7 +2,7 @@
   "schema": "research-workflow/v1",
   "topic": "证书门控-多层扰动度量",
   "created_at": "2026-10-23T06:30:00+08:00",
-  "updated_at": "2026-10-23T06:30:00+08:00",
+  "updated_at": "2026-10-22T23:26:54+00:00",
   "registered_by": "night-unit candidate-design（驱动器 2026-10-23T06:17:26+08:00 派发，stage=design）",
   "admission": {
     "verdict": "admitted",
@@ -23,9 +23,23 @@
     "protocol_source": "experiments/pilot-design.md §1-§8（2026-10-22 预注册）+ notes/DECISIONS.md"
   },
   "completion_files": {
-    "design": ["workflow.json", "STATUS.md", "notes/DECISIONS.md"],
-    "experiment-redesign": ["results/pilot-f2fix-metrics.json", "results/pilot-f2fix-summary.md", "results/pilot-f2fix-summary.json", "notes/DECISIONS.md（F2 修复判读条目）"],
-    "experiment-long": ["results/phase3-metrics.json", "results/phase3-summary.md", "results/phase3-summary.json", "notes/DECISIONS.md（Phase 3 终判条目）"],
+    "design": [
+      "workflow.json",
+      "STATUS.md",
+      "notes/DECISIONS.md"
+    ],
+    "experiment-redesign": [
+      "results/pilot-f2fix-metrics.json",
+      "results/pilot-f2fix-summary.md",
+      "results/pilot-f2fix-summary.json",
+      "notes/DECISIONS.md（F2 修复判读条目）"
+    ],
+    "experiment-long": [
+      "results/phase3-metrics.json",
+      "results/phase3-summary.md",
+      "results/phase3-summary.json",
+      "notes/DECISIONS.md（Phase 3 终判条目）"
+    ],
     "project_done": "STATUS.md 阶段=完结（H1 supported/falsified 定案）+ DECISIONS 最终判读 + 复现入口 + git 提交链完整；publish 阶段另建公开仓库推送并把 remote 记入 notes/"
   },
   "lessons": [
@@ -44,7 +58,9 @@
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "brief": "brief.md" },
+      "completion": {
+        "brief": "brief.md"
+      },
       "result": "notes/HYPOTHESES.md",
       "attempts": 1,
       "note": "2026-10-21 文献三篇全文交叉（2403.18266 / 2608.27518+2406.06811 / 2610.22439）；H1 预注册 + 4 条好奇归档假设见 notes/HYPOTHESES.md。"
@@ -52,20 +68,33 @@
     {
       "id": "design",
       "kind": "design",
-      "depends_on": ["hypothesis"],
+      "depends_on": [
+        "hypothesis"
+      ],
       "status": "done",
       "role": "planner",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "design": "experiments/" },
+      "completion": {
+        "design": "experiments/"
+      },
       "result": {
         "stage_id": "design",
         "result_kind": "input",
         "source_mode": "live",
         "historical": false,
-        "result_files": ["workflow.json", "STATUS.md", "notes/DECISIONS.md"],
-        "metrics": { "admission": "admitted", "phases_completed": 2, "preregistered_failure_conditions": 5, "projects_active": 2 },
+        "result_files": [
+          "workflow.json",
+          "STATUS.md",
+          "notes/DECISIONS.md"
+        ],
+        "metrics": {
+          "admission": "admitted",
+          "phases_completed": 2,
+          "preregistered_failure_conditions": 5,
+          "projects_active": 2
+        },
         "verdict": "supported",
         "reproduction": "读 workflow.json 与 STATUS.md（active/design 行）；设计实质=experiments/pilot-design.md §1-§8 预注册协议（2026-10-22），本单元仅做管线登记，不开始实验。",
         "next_action": "continue",
@@ -77,24 +106,42 @@
     {
       "id": "experiment",
       "kind": "experiment",
-      "depends_on": ["design"],
+      "depends_on": [
+        "design"
+      ],
       "status": "done",
       "role": "executor",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "result": "results/" },
+      "completion": {
+        "result": "results/"
+      },
       "result": {
         "stage_id": "experiment",
         "result_kind": "scientific_result",
         "source_mode": "live",
         "historical": false,
-        "result_files": ["results/pilot-metrics.json", "results/pilot-summary.md", "results/pilot-summary.json", "results/calibration-sweep.txt", "experiments/analyze_pilot.py"],
+        "result_files": [
+          "results/pilot-metrics.json",
+          "results/pilot-summary.md",
+          "results/pilot-summary.json",
+          "results/calibration-sweep.txt",
+          "experiments/analyze_pilot.py"
+        ],
         "metrics": {
-          "seeds": 5, "tasks": 10, "arms": 5, "width": 64,
-          "F_baseline": 0.0557, "F_spectral": 0.0331, "F_triplet": 0.0331, "F_cka": 0.0557, "F_beta": 0.0529,
+          "seeds": 5,
+          "tasks": 10,
+          "arms": 5,
+          "width": 64,
+          "F_baseline": 0.0557,
+          "F_spectral": 0.0331,
+          "F_triplet": 0.0331,
+          "F_cka": 0.0557,
+          "F_beta": 0.0529,
           "gating_vs_baseline_rel_reduction": "-41% (CI95 [0.0158,0.0297] 不含 0, 5/5 种子同向)",
-          "f1_max_abs_rho_cross_seed": 0.68, "f1_max_abs_rho_detroended": 0.35,
+          "f1_max_abs_rho_cross_seed": 0.68,
+          "f1_max_abs_rho_detroended": 0.35,
           "switch_rate_mean_max_spectral_triplet": "0.49/0.67",
           "cost_ratio": 0.35,
           "triplet_vs_spectral_action_delta": 0.0
@@ -112,24 +159,41 @@
     {
       "id": "experiment-cifar",
       "kind": "experiment",
-      "depends_on": ["experiment"],
+      "depends_on": [
+        "experiment"
+      ],
       "status": "done",
       "role": "executor",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "result": "results/" },
+      "completion": {
+        "result": "results/"
+      },
       "result": {
         "stage_id": "experiment-cifar",
         "result_kind": "scientific_result",
         "source_mode": "live",
         "historical": false,
-        "result_files": ["results/cifar-metrics.json", "results/cifar-summary.md", "results/cifar-summary.json", "results/cifar-probe.json", "results/cifar-probe.log"],
+        "result_files": [
+          "results/cifar-metrics.json",
+          "results/cifar-summary.md",
+          "results/cifar-summary.json",
+          "results/cifar-probe.json",
+          "results/cifar-probe.log"
+        ],
         "metrics": {
-          "seeds": 3, "dataset": "Split-CIFAR10 (5 任务 x 2 类)", "width": 256,
-          "F_baseline": 0.1121, "F_spectral": 0.1190, "F_triplet": 0.0991, "F_beta": 0.0991, "F_cka": 0.1121,
+          "seeds": 3,
+          "dataset": "Split-CIFAR10 (5 任务 x 2 类)",
+          "width": 256,
+          "F_baseline": 0.1121,
+          "F_spectral": 0.119,
+          "F_triplet": 0.0991,
+          "F_beta": 0.0991,
+          "F_cka": 0.1121,
           "triplet_vs_baseline_delta": "+0.0129 (CI95 [-0.0234,+0.0622] 含 0, 1 胜 1 负 1 平)",
-          "f1_max_abs_rho_raw": 0.6014, "f1_max_abs_rho_detroended": 0.8811,
+          "f1_max_abs_rho_raw": 0.6014,
+          "f1_max_abs_rho_detroended": 0.8811,
           "switch_rate_mean_max": "spectral 0.25/0.5; beta/triplet 0.33/0.5",
           "cost_ratio_steady": 11.0,
           "drift_channel_alarms": "0/27"
@@ -147,56 +211,167 @@
     {
       "id": "experiment-redesign",
       "kind": "experiment",
-      "depends_on": ["experiment-cifar"],
+      "depends_on": [
+        "experiment-cifar"
+      ],
       "status": "done",
       "role": "executor",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "result": "results/" },
+      "completion": {
+        "result": "results/"
+      },
       "result": {
+        "status": "ok",
+        "project": "证书门控-多层扰动度量",
+        "stage": "experiment-redesign",
         "stage_id": "experiment-redesign",
         "result_kind": "scientific_result",
         "source_mode": "live",
         "historical": false,
-        "result_files": ["results/pilot-f2fix-metrics.json", "results/pilot-f2fix-summary.md", "results/pilot-f2fix-summary.json", "experiments/analyze_f2fix.py", "notes/DECISIONS.md"],
+        "source": "",
+        "result_files": [
+          "results/pilot-f2fix-metrics.json",
+          "results/pilot-f2fix-summary.md",
+          "results/pilot-f2fix-summary.json",
+          "experiments/analyze_f2fix.py",
+          "notes/DECISIONS.md",
+          "STATUS.md",
+          "workflow.json"
+        ],
+        "artifacts": [
+          "results/pilot-f2fix-summary.md",
+          "results/pilot-f2fix-summary.json",
+          "results/pilot-f2fix-metrics.json"
+        ],
         "metrics": {
-          "runs": 40, "unique_rule_cells": 6, "alias_cells": 1, "seeds": 5, "arms": 5,
-          "control": "none/p1/tau2 原规则同批重跑（spectral F=0.0331, switch 0.49/0.67, 复现 Phase 1 触发）",
-          "candidates_failing_gate": "6/6（switch 主口径 max 与次口径 mean 双读均 FAIL）",
-          "persist_k2": {"F_spectral": 0.0333, "switch_mean_max": "0.27/0.44", "paired_dF_mean": 0.0002, "paired_ci95": [-0.0071, 0.0096], "nearest_miss": "seed2 switch 0.44>0.3"},
-          "persist_k3": {"F_spectral": 0.0433, "switch_mean_max": "0.13/0.22", "paired_dF_mean": 0.0102, "note": "seed1/4 漏全部告警，F 回落 baseline"},
-          "detrend_alone": {"F_spectral": 0.0451, "switch": "0.29/0.56", "beta_arm_switch_max": 0.6667, "triplet_forced": 8},
-          "detrend_plus_k2": {"F_spectral": 0.05, "paired_dF": 0.0169, "paired_ci95": [0.0067, 0.0276], "triplet": {"F": 0.0311, "switch": "0.22/0.22"}},
-          "tau3_sensitivity": {"F_spectral_alone": 0.0454, "F_spectral_plus_k2": 0.0523},
-          "persist_tradeoff_k123": {"switch_mean_max": ["0.49/0.67", "0.27/0.44", "0.13/0.22"], "F": [0.0331, 0.0333, 0.0433], "isolate": [14, 11, 9]},
-          "f1_max_abs_pooled_rho_per_rule": "0.48-0.72（全规则未触发；旧草稿 0.9667 系单种子 n=9 假高）",
-          "f5_cost_ratio": "0.34-0.39（规则层修复不变成本，仍触发）"
+          "runs": 40,
+          "unique_rule_cells": 6,
+          "alias_cells": 1,
+          "seeds": 5,
+          "arms": 5,
+          "control": "none/p1/tau2 同批重跑复现 Phase 1 触发（spectral switch 0.49/0.67, F=0.0331）",
+          "candidates_failing_gate": "6/6（switch 主口径 per-seed max 与次口径 mean 双读均 FAIL；验收=switch<0.3+F̄≤0.0331+配对每种子不劣化>0.005）",
+          "persist_k2": {
+            "F_spectral": 0.0333,
+            "switch_mean_max": "0.27/0.44",
+            "paired_dF_mean": 0.0002,
+            "paired_ci95": [
+              -0.0071,
+              0.0096
+            ],
+            "nearest_miss": "seed2 switch 0.44>0.3"
+          },
+          "persist_k3": {
+            "F_spectral": 0.0433,
+            "switch_mean_max": "0.13/0.22",
+            "paired_dF_mean": 0.0102,
+            "note": "seed1/4 漏全部告警，F 回落 baseline"
+          },
+          "detrend_alone": {
+            "F_spectral": 0.0451,
+            "switch": "0.29/0.56",
+            "beta_arm_switch_max": 0.6667,
+            "triplet_forced": 8
+          },
+          "detrend_plus_k2": {
+            "F_spectral": 0.05,
+            "paired_dF": 0.0169,
+            "paired_ci95": [
+              0.0067,
+              0.0276
+            ],
+            "triplet": {
+              "F": 0.0311,
+              "switch": "0.22/0.22"
+            }
+          },
+          "tau3_sensitivity": {
+            "F_spectral_alone": 0.0454,
+            "F_spectral_plus_k2": 0.0523
+          },
+          "persist_tradeoff_k123": {
+            "switch_mean_max": [
+              "0.49/0.67",
+              "0.27/0.44",
+              "0.13/0.22"
+            ],
+            "F": [
+              0.0331,
+              0.0333,
+              0.0433
+            ],
+            "isolate_total": [
+              14,
+              11,
+              9
+            ]
+          },
+          "f1_max_abs_pooled_rho_per_rule": "0.48-0.72（全规则未触发；旧草稿 0.9667 系单种子 n=9 假高，按 §8 跨种子汇总口径重算）",
+          "f5_cost_ratio": "0.34-0.39（规则层修复不变触发计算成本，仍触发）"
         },
         "verdict": "falsified",
-        "verdict_scope": "F2 预注册修复候选集（三候选含 k=2/3 消融）全部未过验收 gate——非 H1 判决；H1 仍未决（F3 长序列路径未走）",
-        "reproduction": "PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed <0..4> --f2-fix <none|detrend|persist> --persist <1|2|3> [--tau-hi <2.0|3.0>] --out results/pilot-f2fix-metrics.json --log results/pilot-f2fix-seed<N>-<fix>-tau<tau>[-p<k>].log && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix.py --in results/pilot-f2fix-metrics.json --md results/pilot-f2fix-summary.md --json results/pilot-f2fix-summary.json",
+        "reproduction": "cd D:/hermes-data/research/证书门控-多层扰动度量 && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed <0..4> --f2-fix <none|detrend|persist> --persist <1|2|3> [--tau-hi <2.0|3.0>] --out results/pilot-f2fix-metrics.json --log results/pilot-f2fix-seed<N>-<fix>-tau<tau>[-p<k>].log && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix.py --in results/pilot-f2fix-metrics.json --md results/pilot-f2fix-summary.md --json results/pilot-f2fix-summary.json",
         "next_action": "redesign",
-        "key_finding": "F2 振荡无法用预注册三候选无代价修复：persist 平滑存在单调 stability-sensitivity trade-off（k=2 保 F 但 seed2 switch 0.44；k=3 稳但丢 F）；detrend 改变告警结构（三通道全激活、beta 臂新违例、槽位耗尽、spectral F 显著变差）；tau 提高一律以 F 劣化为代价。F1 全规则未触发（跨种子汇总口径）。",
-        "run_id": "f2fix-2026-10-23",
-        "observed_at": "2026-10-23"
+        "commits": [
+          "d767fc2",
+          "9535f06"
+        ],
+        "next_units": [
+          {
+            "project": "证书门控-多层扰动度量",
+            "instruction": "experiment-redesign-2（看板卡 t_c667aa2d）：先写 DECISIONS 预注册候选④集（a 非对称持续期 k_in=2/k_out=3 或加宽 hysteresis band；b 稳健 z median/MAD 或 EWMA z；c 仅 bound 通道去趋势混合），实现进 gating.py/train.py 同模式接口，5 种子×5 臂跑 results/pilot-f2fix2-*，用 analyze_f2fix.py 同口径判读（标签含 persist 轴/F1 跨种子汇总/switch 双口径）；过 gate 则选定 Phase 3 规则并开 experiment-long（T=50 终判），仍全败则升级组合拍板（降规模：k=2 规则+switch_max 0.44 限制报告）",
+            "estimate_min": 35,
+            "stage": "experiment-redesign-2"
+          },
+          {
+            "project": "证书门控-多层扰动度量",
+            "instruction": "遗留独立单元：gh 建公开仓库+push 全部本地 commits（publish=github-push 已授权），remote 记入 notes/",
+            "estimate_min": 15,
+            "stage": "publish"
+          }
+        ],
+        "notes": "F2 预注册三候选（含 persist k=2/3 消融与组合）6/6 未过验收 gate——persist 平滑存在单调 stability-sensitivity trade-off、detrend 改变告警结构、tau 提高一律以 F 劣化为代价；F1 全规则未触发；verdict=falsified 仅限修复候选集，H1 仍未决（F3 路径未走），按预注册 verdict_mapping 转 redesign。"
       },
-      "attempts": 1,
+      "attempts": 2,
       "note": "2026-10-23 experiment-redesign 单元完成：上一单元遗留 26 runs（设计有缺口：原规则对照仅 seed0/1、k=3 未测、分析标签碰撞）→ 本单元补跑 14 runs 凑齐 6 唯一单元×5 种子+别名复证，重写 analyze_f2fix.py（persist 轴进标签/预注册跨种子 F1 口径/switch 双口径），判读 6/6 FAIL。按 verdict_mapping 转 redesign（候选④集见 DECISIONS 2026-10-23 条）。"
     },
     {
       "id": "experiment-long",
       "kind": "experiment",
-      "depends_on": ["experiment-redesign"],
+      "depends_on": [
+        "experiment-redesign"
+      ],
       "status": "pending",
       "role": "executor",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": { "result": "results/" },
+      "completion": {
+        "result": "results/"
+      },
       "result": null,
       "attempts": 0,
       "strategy": "Phase 3 终判：合成 T=50 × 5 臂 × 5 种子（F2 修复后规则），H1 主判据+次判据②+F1 跨种子检查一次收口；F3 预注册：长序列仍无增益 → falsified（写负结果）；注意 T=50 下 F5 成本超线性会加重，须附成本曲线。规模在单元窗口内跑不完时按种子分片写断点。**前置状态（2026-10-23 experiment-redesign 回执）：F2 修复轮次 1 全候选未过 gate——Phase 3 待 experiment-redesign-2 产出合格规则，或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后方可启动。**"
+    },
+    {
+      "id": "experiment-redesign-redesign",
+      "kind": "experiment",
+      "depends_on": [
+        "experiment-redesign"
+      ],
+      "status": "ready",
+      "role": "executor",
+      "hypothesis_id": "H1",
+      "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
+      "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
+      "completion": {
+        "result": "results/"
+      },
+      "result": null,
+      "attempts": 0,
+      "strategy": ""
     }
   ]
 }
