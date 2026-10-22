@@ -148,15 +148,41 @@
       "id": "experiment-redesign",
       "kind": "experiment",
       "depends_on": ["experiment-cifar"],
-      "status": "ready",
+      "status": "done",
       "role": "executor",
       "hypothesis_id": "H1",
       "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
       "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
       "completion": { "result": "results/" },
-      "result": null,
-      "attempts": 0,
-      "strategy": "F2 规则修复（预注册重设计路径）：三候选 ①bound 去趋势 z（减任务序号线性项）②提高 tau ③动作持续期平滑（连续 k 个边界告警才切）；pilot T=10 重跑验收 switch<0.3 且 F̄ 不劣化于 0.0331，产物 results/pilot-f2fix-*。图像触发惰性候选（尖峰持续期确认/隔离槽步数放大）可同轮验证，但 tau 分布校准只能作敏感性分析报告（防事后调参）。"
+      "result": {
+        "stage_id": "experiment-redesign",
+        "result_kind": "scientific_result",
+        "source_mode": "live",
+        "historical": false,
+        "result_files": ["results/pilot-f2fix-metrics.json", "results/pilot-f2fix-summary.md", "results/pilot-f2fix-summary.json", "experiments/analyze_f2fix.py", "notes/DECISIONS.md"],
+        "metrics": {
+          "runs": 40, "unique_rule_cells": 6, "alias_cells": 1, "seeds": 5, "arms": 5,
+          "control": "none/p1/tau2 原规则同批重跑（spectral F=0.0331, switch 0.49/0.67, 复现 Phase 1 触发）",
+          "candidates_failing_gate": "6/6（switch 主口径 max 与次口径 mean 双读均 FAIL）",
+          "persist_k2": {"F_spectral": 0.0333, "switch_mean_max": "0.27/0.44", "paired_dF_mean": 0.0002, "paired_ci95": [-0.0071, 0.0096], "nearest_miss": "seed2 switch 0.44>0.3"},
+          "persist_k3": {"F_spectral": 0.0433, "switch_mean_max": "0.13/0.22", "paired_dF_mean": 0.0102, "note": "seed1/4 漏全部告警，F 回落 baseline"},
+          "detrend_alone": {"F_spectral": 0.0451, "switch": "0.29/0.56", "beta_arm_switch_max": 0.6667, "triplet_forced": 8},
+          "detrend_plus_k2": {"F_spectral": 0.05, "paired_dF": 0.0169, "paired_ci95": [0.0067, 0.0276], "triplet": {"F": 0.0311, "switch": "0.22/0.22"}},
+          "tau3_sensitivity": {"F_spectral_alone": 0.0454, "F_spectral_plus_k2": 0.0523},
+          "persist_tradeoff_k123": {"switch_mean_max": ["0.49/0.67", "0.27/0.44", "0.13/0.22"], "F": [0.0331, 0.0333, 0.0433], "isolate": [14, 11, 9]},
+          "f1_max_abs_pooled_rho_per_rule": "0.48-0.72（全规则未触发；旧草稿 0.9667 系单种子 n=9 假高）",
+          "f5_cost_ratio": "0.34-0.39（规则层修复不变成本，仍触发）"
+        },
+        "verdict": "falsified",
+        "verdict_scope": "F2 预注册修复候选集（三候选含 k=2/3 消融）全部未过验收 gate——非 H1 判决；H1 仍未决（F3 长序列路径未走）",
+        "reproduction": "PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed <0..4> --f2-fix <none|detrend|persist> --persist <1|2|3> [--tau-hi <2.0|3.0>] --out results/pilot-f2fix-metrics.json --log results/pilot-f2fix-seed<N>-<fix>-tau<tau>[-p<k>].log && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix.py --in results/pilot-f2fix-metrics.json --md results/pilot-f2fix-summary.md --json results/pilot-f2fix-summary.json",
+        "next_action": "redesign",
+        "key_finding": "F2 振荡无法用预注册三候选无代价修复：persist 平滑存在单调 stability-sensitivity trade-off（k=2 保 F 但 seed2 switch 0.44；k=3 稳但丢 F）；detrend 改变告警结构（三通道全激活、beta 臂新违例、槽位耗尽、spectral F 显著变差）；tau 提高一律以 F 劣化为代价。F1 全规则未触发（跨种子汇总口径）。",
+        "run_id": "f2fix-2026-10-23",
+        "observed_at": "2026-10-23"
+      },
+      "attempts": 1,
+      "note": "2026-10-23 experiment-redesign 单元完成：上一单元遗留 26 runs（设计有缺口：原规则对照仅 seed0/1、k=3 未测、分析标签碰撞）→ 本单元补跑 14 runs 凑齐 6 唯一单元×5 种子+别名复证，重写 analyze_f2fix.py（persist 轴进标签/预注册跨种子 F1 口径/switch 双口径），判读 6/6 FAIL。按 verdict_mapping 转 redesign（候选④集见 DECISIONS 2026-10-23 条）。"
     },
     {
       "id": "experiment-long",
@@ -170,7 +196,7 @@
       "completion": { "result": "results/" },
       "result": null,
       "attempts": 0,
-      "strategy": "Phase 3 终判：合成 T=50 × 5 臂 × 5 种子（F2 修复后规则），H1 主判据+次判据②+F1 跨种子检查一次收口；F3 预注册：长序列仍无增益 → falsified（写负结果）；注意 T=50 下 F5 成本超线性会加重，须附成本曲线。规模在单元窗口内跑不完时按种子分片写断点。"
+      "strategy": "Phase 3 终判：合成 T=50 × 5 臂 × 5 种子（F2 修复后规则），H1 主判据+次判据②+F1 跨种子检查一次收口；F3 预注册：长序列仍无增益 → falsified（写负结果）；注意 T=50 下 F5 成本超线性会加重，须附成本曲线。规模在单元窗口内跑不完时按种子分片写断点。**前置状态（2026-10-23 experiment-redesign 回执）：F2 修复轮次 1 全候选未过 gate——Phase 3 待 experiment-redesign-2 产出合格规则，或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后方可启动。**"
     }
   ]
 }

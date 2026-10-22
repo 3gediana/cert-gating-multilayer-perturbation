@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from tasks import make_task_sequence, make_split_cifar
 from model import SlotsModel
 from triggers import linear_cka, anchor_jacobians, spectral_bound, subspace_leakage
-from gating import CHANNELS, RunningZ, decide
+from gating import CHANNELS, RunningZ, TrendAdjustedZ, decide
 
 ARMS = {
     "baseline": [],
@@ -85,19 +85,24 @@ def train_steps(model, group, task, slot, head, device, steps, batch, lr):
     return float(loss.detach())
 
 
-def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log):
+def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log,
+            f2_fix="none", persist=1):
     torch.manual_seed(seed)
     np.random.seed(seed)
     model = SlotsModel(cfg["d"], cfg["width"], cfg["k"], cfg["T"], cfg["slots"]).to(device)
     active = ARMS[arm_name]
     assignments = [0] * cfg["T"]
     free_slots = list(range(1, cfg["slots"]))
-    zstats = {c: RunningZ() for c in CHANNELS}
+    # F2 修复候选 detrend：去趋势 z（其余规则用原 RunningZ）
+    ZCls = TrendAdjustedZ if f2_fix == "detrend" else RunningZ
+    zstats = {c: ZCls() for c in CHANNELS}
+    rule = {"f2_fix": f2_fix, "tau_hi": tau_hi, "band": band, "persist": persist}
     deltas = []
     feats_cache = {}
     eval_hist = []
     records = []
     prev_action = "merge"
+    gate_state = {}
     names = [n for n, _ in model.named_parameters()]
     t_jac = t_svd = t_cka = t_train = t_iso = 0.0
 
@@ -144,8 +149,9 @@ def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log):
         action, max_z, override, forced = "merge", 0.0, False, False
         if i >= 2 and active:
             for c in CHANNELS:
-                zs[c] = zstats[c].z(raws[c])
-            action, max_z, override = decide(zs, active, prev_action, tau_hi, band)
+                zs[c] = zstats[c].z(i, raws[c])
+            action, max_z, override, gate_state = decide(
+                zs, active, prev_action, tau_hi, band, persist, gate_state)
 
         if action == "isolate":
             if free_slots:
@@ -162,7 +168,7 @@ def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log):
         # z 统计只观察先于当前任务的样本（决策后观察）
         if i >= 1:
             for c in CHANNELS:
-                zstats[c].observe(raws[c])
+                zstats[c].observe(i, raws[c])
         deltas.append(dW)
 
         # 全部已见任务评估（遗忘度量）
@@ -217,6 +223,7 @@ def run_arm(arm_name, tasks, cfg, seed, device, tau_hi, band, log):
 
     cost_ratio = (t_jac + t_svd + t_cka) / max(t_train, 1e-9)
     summary = {
+        "rule": rule,
         "mean_forgetting": round(float(np.mean(list(forgetting.values()))), 4),
         "mean_final_acc": round(float(np.mean(list(final.values()))), 4),
         "per_task_forgetting": {str(j): round(v, 4) for j, v in forgetting.items()},
@@ -244,6 +251,13 @@ def main():
     ap.add_argument("--log", default="results/smoke-log.txt")
     ap.add_argument("--tau-hi", type=float, default=2.0)
     ap.add_argument("--band", type=float, default=0.3)
+    # F2 修复候选（预注册三候选，见 gating.py 模块 docstring / DECISIONS.md
+    # 2026-10-22 条）：none=原规则（回归对照）/ detrend=去趋势 z /
+    # persist=动作持续期平滑（连续 persist 个边界确认才切换）；tau 提高用
+    # --tau-hi 传（阈值类修法只作敏感性分析，见 workflow.json 约定）
+    ap.add_argument("--f2-fix", default="none",
+                    choices=["none", "detrend", "persist"])
+    ap.add_argument("--persist", type=int, default=2)
     ap.add_argument("--device", default="auto")
     # 难度校准覆盖（pilot-design.md §4 要求 baseline 遗忘非零才有效度；
     # 宽度提升会压掉遗忘，这些覆盖只用于校准扫描，校准结果拍板后烘焙进 PHASES）
@@ -268,6 +282,8 @@ def main():
         lines.append(msg)
 
     log(f"# run phase={args.phase} seed={args.seed} device={device} torch={torch.__version__}")
+    log(f"# rule: f2_fix={args.f2_fix} persist={args.persist} "
+        f"tau_hi={args.tau_hi} band={args.band}")
     log(f"# config={json.dumps(cfg, ensure_ascii=False)}")
 
     if args.phase == "cifar":
@@ -305,7 +321,8 @@ def main():
     for arm in ARMS:
         log(f"== arm {arm} (active={ARMS[arm]}) ==")
         arms_out.append(run_arm(arm, tasks, cfg, args.seed, device,
-                                args.tau_hi, args.band, log))
+                                args.tau_hi, args.band, log,
+                                args.f2_fix, args.persist))
     total = time.perf_counter() - t0
 
     log("== summary ==")
@@ -321,6 +338,7 @@ def main():
         "run_id": f"{args.phase}-seed{args.seed}-{int(time.time())}",
         "config": {"phase": args.phase, "seed": args.seed, "tau_hi": args.tau_hi,
                    "band": args.band, "device": device, "torch": torch.__version__,
+                   "f2_fix": args.f2_fix, "persist": args.persist,
                    **cfg},
         "wall_sec": round(total, 2),
         "arms": arms_out,

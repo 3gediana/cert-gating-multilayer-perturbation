@@ -50,3 +50,39 @@
 - 驱动器 06:17 派发 candidate-design（快权重课题 stop 后队列空，落到本课题）：workflow.json 登记 H1/预测/失败条件/最小可判别实验/完成文件，STATUS 标 active/design。准入显然成立（Phase 0-2 真实结果在盘、F3 预注册路径未走完、组合 2/3 项目）→ next_action=continue。
 - 关键拍板：workflow.json 对 F1-F5 只**引用** pilot-design.md §7 预注册、不重定义阈值——PORTFOLIO 04:59 记录的「泛化 workflow 抢占预注册协议」担忧以"引用而非重写"落进 schema。管线 ready 阶段=experiment-redesign（F2 修复三候选，验收 switch<0.3 且 F̄ 不劣化 0.0331），后接 experiment-long（Phase 3 T=50 终判）。
 - 图像触发惰性的修法（τ 分布校准/尖峰持续期确认/隔离槽步数放大）随 F2 修复同轮验证，但 τ 分布校准只能作敏感性分析报告——不得事后调参改预注册主判据。
+
+## [2026-10-23] F2 修复判读（experiment-redesign 阶段）：预注册三候选 6/6 全部未过验收 gate
+- 网格：6 个唯一规则单元 × 5 种子 × 5 臂（pilot T=10 width64 校准版，40 runs）+ 1 别名单元。
+  对照 = none/p1/tau2（原规则同批重跑：spectral switch 0.49/0.67、F̄=0.0331——逐位复现
+  Phase 1 触发读数与归档基准，对照有效）。别名 persist/p2/tau2≡none/p2/tau2（f2_fix=persist
+  只是 --persist 的别名，行为字段逐位相同）——作 GPU 确定性复证，不进分析。
+- 验收（workflow.json gate_step 预注册）：switch<0.3（主口径=per-seed rate 跨种子 max，
+  与 analyze_pilot.py 的 F2 实现一致；次口径=mean，双口径都判）+ F̄≤0.0331 + 同批配对
+  每种子不劣化（>0.005 视劣化）。
+- **总判：6/6 候选 FAIL（主/次双口径都 FAIL）**。明细（spectral/triplet 臂）：
+  - ③ persist k=2：F̄ 0.0333（配对 Δ+0.0002，CI95[-0.0071,+0.0096] 含 0——F 无损），
+    switch 0.27/0.44——seed2 仍 0.44>0.3（主口径败）；seed4 配对 +0.0168（漏 1 次隔离）。
+    距 PASS 最近的一格。
+  - ③ persist k=3：switch 0.13/0.22 ✓ 但 F̄ 0.0433 ✗（配对 Δ+0.0102；seed1/4 告警簇需
+    连续 3 边界确认 → 完全不隔离，F 回落到 baseline 0.0960/0.0486）。
+  - ① detrend 单独：spectral sw 0.29/0.56 ✗、F 0.0451 ✗；beta 臂 sw 0.67 ✗（新违例）。
+    ①+③：spectral sw 0.13/0.22 ✓ 但 F 0.0500 ✗（配对 Δ+0.0169，CI95[+0.0067,+0.0276]
+    不含 0——显著变差）；triplet sw 0.22/0.22 ✓ F 0.0311 ✓，仅 seed4 配对 +0.0074 越容忍
+    且 beta 臂 0.33 ✗。
+  - ② tau=3（仅敏感性分析）：单独 sw 0.27/0.67 ✗ F 0.0454 ✗；+③ sw ✓ F 0.0523 ✗。
+    阈值类修法一律以 F 劣化为代价——坐实"只能作敏感性分析"的约定。
+- persist 家族 trade-off（k=1/2/3）：switch mean/max 0.49/0.67→0.27/0.44→0.13/0.22；
+  F̄ 0.0331→0.0333→0.0433；isolate 14→11→9。单调：持续性平滑用灵敏度换稳定性。
+- detrend 机制（新事实）：去趋势后三通道全部开始越界（drift 0/40→7-11/40，beta 0-1/40
+  →11-14/40）——drift 随任务序号单调下降、原始 z 恒负，去趋势后晚期残差转正 → cka/beta
+  臂从"从不告警"变频繁告警（beta switch 0.33-0.67，F2 新违例），triplet 槽位耗尽
+  （detrend/p1 forced 8 次）。detrend 不是"修 F2"而是换了一组告警结构。
+- F1：全部规则跨种子汇总 max|ρ|=0.48-0.72 <0.9 → 未触发。此前草稿里的 0.9667 是单种子
+  n=9 假高（§8 判读细则预判的现象再次应验）——已按预注册口径（跨种子汇总）重算改写。
+- 处置：按 workflow verdict_mapping"F2 修复失败 → redesign"。下一单元预注册候选④集
+  （先写台账再跑，防事后调参）：a) 非对称持续期（进 isolate k=2/退 k=3）或加宽
+  hysteresis band；b) 稳健 z（median/MAD）或 EWMA z（隐式去趋势、不激活全部通道）；
+  c) 混合：仅 bound 通道去趋势。验收 gate 不变。降规模选项（待组合拍板）：Phase 3 直接用
+  k=2 规则、switch_max 0.44 作限制报告。
+- 工程记录：f2_fix=persist 与 none+--persist 行为等价（别名，旧版分析标签碰撞会静默
+  覆盖单元——标签必须含 persist 轴）；write_file 拒覆盖已读文件时经 scratch+cp 落盘。

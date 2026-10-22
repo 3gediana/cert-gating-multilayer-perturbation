@@ -1,7 +1,7 @@
 # 状态
 
-- 阶段：active/design（workflow.json 已登记，准入成立；研究实质：Phase 2 完成，F3 延续+F2 修复待做——管线 ready 阶段 experiment-redesign）
-- 最近更新：2026-10-23（design 单元：workflow.json 登记预注册协议+已完阶段回执，STATUS 标 active/design；研究内容无变化，读数见下）
+- 阶段：experiment-redesign 完成（F2 修复判读落档：预注册三候选 6/6 未过验收 gate → 转 redesign；H1 仍未决——F3 长序列路径未走，Phase 3 待合格规则）
+- 最近更新：2026-10-23（experiment-redesign 单元：F2 修复实验补跑 14 runs 凑齐网格（共 40 runs）+ 分析脚本重写（persist 轴进标签/预注册 F1 口径/双口径 switch）+ 判读落档 DECISIONS；详见下节）
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物
@@ -21,6 +21,11 @@
 - `results/cifar-seed{0..2}.log`——每种子完整日志
 - `results/cifar-summary.md` + `results/cifar-summary.json`——**Phase 2 主表与 F1-F5 判读**
 - `results/cifar-probe.{json,log}`——steps=3 管线探针（耗时外推 + 显存验证，runs=1）
+- `results/pilot-f2fix-metrics.json`——**F2 修复正式实验（40 runs：6 唯一规则单元 × 5 种子 × 5 臂 + 1 别名单元）**
+- `results/pilot-f2fix-seed{0..4}-{none,detrend}-tau{2.0,3.0}[-p1,-p3].log` + `results/pilot-f2fix-seed{0..4}-persist-tau2.0.log`——每单元完整日志（40 个）
+- `results/pilot-f2fix-summary.md` + `results/pilot-f2fix-summary.json`——**F2 修复主表与验收判读（本阶段结论）**
+- `experiments/analyze_f2fix.py`——F2 修复聚合分析（重写版：规则标签含 persist 轴 / F1 跨种子汇总预注册口径 / switch 双口径判读）
+- `experiments/gating.py`、`experiments/train.py`——F2 修复候选实现（TrendAdjustedZ 去趋势 z / decide persist=k 持续期平滑 / --f2-fix --persist --tau-hi）
 - `data/cifar10/`——CIFAR-10 解压数据（HF 镜像预置，gitignored）
 
 ## Phase 1 关键读数（正式结论域，5 种子）
@@ -84,6 +89,31 @@
   （z 2.5-7.9）；隔离收益取决于隔离槽训练充分度（100 步×2000 样本在图像上欠拟合 →
   seed2 回滚+重训反噬 +34%）。
 
+## F2 修复读数（experiment-redesign，正式结论域，5 种子 × 5 臂；验收 gate=预注册）
+
+对照 none/p1/tau2（原规则同批重跑）spectral/triplet：F̄=0.0331（=归档基准），switch 0.49/0.67
+（复现 Phase 1 触发）。验收=switch<0.3（主口径 per-seed max；次口径 mean）+ F̄≤0.0331 + 配对不劣化。
+
+| 规则（候选） | spectral F̄ | spectral sw mean/max | triplet F̄ | triplet sw mean/max | 总判(主/次) |
+|---|---|---|---|---|---|
+| none/p1/tau2（对照） | 0.0331 | 0.49/0.67 | 0.0331 | 0.49/0.67 | （触发态） |
+| ③ persist k=2 | 0.0333 | 0.27/0.44 | 0.0333 | 0.27/0.44 | FAIL/FAIL |
+| ③ persist k=3 | 0.0433 | 0.13/0.22 | 0.0433 | 0.13/0.22 | FAIL/FAIL |
+| ① detrend 单独 | 0.0451 | 0.29/0.56 | 0.0257 | 0.36/0.44 | FAIL/FAIL |
+| ①+③ detrend k=2 | 0.0500 | 0.13/0.22 | 0.0311 | 0.22/0.22 | FAIL/FAIL |
+| ② tau=3（敏感性） | 0.0454 | 0.27/0.67 | 0.0454 | 0.27/0.67 | FAIL/FAIL |
+| ②+③ tau=3 k=2 | 0.0523 | 0.09/0.22 | 0.0466 | 0.13/0.22 | FAIL/FAIL |
+
+- **6/6 候选未过预注册 gate（双口径都 FAIL）**。按 workflow verdict_mapping → redesign。
+  k=2 距 PASS 最近（F 无损、switch mean 腰斩）但 seed2 max 0.44；k=3 稳但丢 F（seed1/4 漏全部告警）。
+- **persist trade-off（k=1/2/3）**：switch mean/max 0.49/0.67→0.27/0.44→0.13/0.22；F̄ 0.0331→0.0333→0.0433；
+  isolate 14→11→9——持续性平滑用灵敏度换稳定性，单调无免费午餐。
+- **detrend 机制（新事实）**：去趋势后三通道全部开始越界（drift 0/40→7-11/40；beta 0-1/40→11-14/40）
+  → cka/beta 臂从从不告警变频繁告警（beta switch 0.33-0.67，F2 新违例）、triplet 槽位耗尽
+  （detrend 单独 forced 8 次）；spectral F 显著变差（+0.0169，CI95 不含 0）。detrend 换的是告警结构，不是修 F2。
+- **F1 未触发（全规则）**：跨种子汇总 max|ρ|=0.48-0.72（旧草稿 0.9667 系单种子 n=9 假高，已按预注册口径重算）。
+- F5 不变：cost_ratio ~0.34-0.39（规则层修复不改变触发计算成本）。
+
 ## 难度校准 v2（已拍板）
 width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告警，对比区不存在）→
 校准扫描定 **pilot = T=10 × width=64 × steps=100 × drift=0.5 × noise=1.0 × k=10**
@@ -97,22 +127,33 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
     PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_pilot.py \
       --in results/cifar-metrics.json --md results/cifar-summary.md \
       --json results/cifar-summary.json   # Phase 2 聚合+判读
+    # F2 修复（experiment-redesign）：规则单元 = (--f2-fix {none,detrend,persist},
+    # --persist {1,2,3}, --tau-hi {2.0,3.0})；40 runs 汇总：
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/train.py --phase pilot --seed <S> \
+      --f2-fix <fix> --persist <k> [--tau-hi <tau>] \
+      --out results/pilot-f2fix-metrics.json --log results/pilot-f2fix-seed<S>-<fix>-tau<tau>[-p<k>].log
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix.py \
+      --in results/pilot-f2fix-metrics.json --md results/pilot-f2fix-summary.md \
+      --json results/pilot-f2fix-summary.json   # F2 修复验收判读
 
 ## git
 - 本地仓库 main 分支，今晚 7 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
   校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
   5a5aeae / Phase 2 判读落档 24f42c2），未推送
 
-## 下一步（workflow 管线，2026-10-23 design 单元起接管）
-- **ready：experiment-redesign**——F2 规则修复（预注册必经步）：bound 趋势性导致 z 振荡，
-  候选：对 bound 去趋势/提高 τ/动作持续期平滑；验收：switch<0.3 且 F 不劣化于 0.0331，
-  产物 results/pilot-f2fix-*。~35min
-- 后接 **experiment-long（Phase 3）**：合成 T=50 长序列（F2 修复后）——"长序列才显著"
-  预测 + 三元组增量复判 = H1 终判（F3 预注册：仍无增益则驳倒）。~45-80min
+## 下一步（workflow 管线）
+- **ready：experiment-redesign-2（F2 修复第二轮）**——预注册候选④集（先写 DECISIONS 再跑，
+  防事后调参）：a) 非对称持续期（进 isolate k=2/退 k=3）或加宽 hysteresis band；
+  b) 稳健 z（median/MAD）或 EWMA z（隐式去趋势、不激活全部通道）；c) 混合：仅 bound
+  通道去趋势。验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。
+  产物 results/pilot-f2fix2-*。~35min
+- **experiment-long（Phase 3）前置未满足**：F2 修复无候选过预注册 gate → 待 redesign-2
+  产出合格规则；或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后启动。
+  T=50 长序列"长序列才显著"预测 + 三元组增量复判 = H1 终判（F3 预注册：仍无增益则驳倒）。~45-80min
 - 图像门控候选修法（τ 分布校准=敏感性分析报告，防事后调参/尖峰持续期确认/隔离槽步数
-  放大）随 experiment-redesign 同轮验证，不改预注册主判据。
+  放大）随 F2 修复轮次验证，不改预注册主判据。
 - 遗留独立单元：gh 建公开仓库+push 全部本地 commits（publish=github-push 已授权），
   remote 记入 notes/。~15min
 
 ## 阻塞
-- 无（F2 与图像触发惰性均为规则层问题，有明确根因假设与候选修法）
+- 无硬阻塞；F2 修复轮次 1 全候选未过 gate（预注册处置路径=redesign，候选④集已列明）。
