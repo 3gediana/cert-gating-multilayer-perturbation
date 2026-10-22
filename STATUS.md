@@ -2,7 +2,7 @@
 
 - 阶段：experiment-redesign 完成（F2 修复判读落档：预注册三候选 6/6 未过验收 gate → 转 redesign；H1 仍未决——F3 长序列路径未走，Phase 3 待合格规则）
 - 最近更新：2026-10-23（experiment-redesign 单元：F2 修复实验补跑 14 runs 凑齐网格（共 40 runs）+ 分析脚本重写（persist 轴进标签/预注册 F1 口径/双口径 switch）+ 判读落档 DECISIONS；详见下节）
-- 收尾恢复点（2026-10-23 07:34，wrap 单元收线）：断点=experiment-redesign 完成（d767fc2/9535f06），**experiment-redesign-redesign（F2 修复第二轮）ready 未开跑**；夜队列已空。明夜驱动器从 workflow ready 阶段接管：**先按 DECISIONS 候选④集写预注册台账再跑**（防事后调参），验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。publish（gh 建公开仓+push）仍为遗留单元，授权已激活未执行。
+- 收尾恢复点（2026-10-23 07:34，wrap 单元收线）：断点=experiment-redesign 完成（d767fc2/9535f06），**experiment-redesign-redesign（F2 修复第二轮）已开跑**（本恢复点写入后被并行会话接手：DECISIONS 候选④台账 07:32 冻结、代码就位、seed0 scratch 跑动中——驱动器日志未见 unit-start，疑似异步会话；其 WIP 未提交是有意保留，勿代提交）；夜队列已空。明夜驱动器从 workflow ready 阶段接管：**先按 DECISIONS 候选④集写预注册台账再跑**（防事后调参），验收 gate 不变（switch<0.3 全臂全种子 + F̄≤0.0331 + 配对不劣化）。publish（gh 建公开仓+push）仍为遗留单元，授权已激活未执行。
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物
@@ -141,7 +141,7 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
 - 本地仓库 main 分支，今晚 8 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
   校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
   5a5aeae / Phase 2 判读落档 24f42c2 / design 管线登记 1ea4ba2 /
-  **experiment-redesign 完成 d767fc2**），未推送
+  **experiment-redesign 完成 d767fc2**）；2026-10-23 07:39 wrap 单元已建公开仓并推送：https://github.com/3gediana/cert-gating-multilayer-perturbation（origin/main，12 commits）
 
 ## 下一步（workflow 管线）
 - **ready：experiment-redesign-2（F2 修复第二轮）**——预注册候选④集（先写 DECISIONS 再跑，
