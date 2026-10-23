@@ -57,9 +57,9 @@
   [triplet] task 8: action=merge slot=0 drift=0.02219855785369873 bound=1044.9883362110704 beta=0.03262094408273697 accs={0: 0.894, 1: 0.93, 2: 0.968, 3: 0.942, 4: 0.972, 5: 1.0, 6: 0.99, 7: 0.982, 8: 0.998}
   [triplet] task 9: action=merge slot=0 drift=0.02227717638015747 bound=1166.23254203517 beta=0.038924433290958405 accs={0: 0.878, 1: 0.9, 2: 0.954, 3: 0.912, 4: 0.968, 5: 1.0, 6: 0.982, 7: 0.972, 8: 0.998, 9: 0.996}
 == summary ==
-    baseline: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.405 params=31076
-         cka: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.380 params=31076
-    spectral: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.403 params=31076
-        beta: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.366 params=31076
-     triplet: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.397 params=31076
+    baseline: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.390 params=31076
+         cka: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.390 params=31076
+    spectral: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.375 params=31076
+        beta: F=0.0486 acc=0.9472 merge=10 iso=0 forced=0 switch=0.00 cost_ratio=0.391 params=31076
+     triplet: F=0.0400 acc=0.9560 merge=9 iso=1 forced=0 switch=0.22 cost_ratio=0.363 params=31076
 # wrote results\pilot-f2fix2-metrics.json (runs=35)

@@ -1,8 +1,9 @@
 # 状态
 
-- 阶段：experiment-redesign-2 完成（F2 修复第二轮 40 runs 判读落档：候选④集 7/7 双口径 FAIL → 转 redesign-3 或组合拍板；asym 最近线——switch/F̄ 双过但卡配对单种子）
-- 最近更新：2026-10-23 07:55（wrap 单元：f2fix2 40/40 收完 + 聚合判读落盘）
+- 阶段：experiment-redesign-2 完成（F2 修复第二轮 40 runs 判读落档：候选④集 7/7 双口径 FAIL → 组合拍板：Phase 3 规则=asym（i2o3）+ F2 限制报告；H1 仍未决——experiment-long T=50 终判待跑）
+- 最近更新：2026-10-23 08:15（experiment-redesign-2 单元：预注册候选④集跑前冻结（07:32）→ 40 runs → 同口径判读 7/7 FAIL → DECISIONS 拍板 Phase 3 规则=asym；详见「F2 修复第二轮读数」节）
 - 收尾恢复点（2026-10-23 07:55，wrap 收线）：experiment-redesign-2 **40/40 runs 完成（736.9s，skipped 0）+ analyze_f2fix2 判读落盘 results/pilot-f2fix2-summary.{md,json}**。判读：7/7 候选主/次口径全 FAIL（预注册 gate 三条件）；**asym（④a 非对称 i2o3）最近线**——switch 0.22/0.22 全种子一致、F̄ 0.0304≤0.0331、4/5 种子配对改善（Δ=-0.007~-0.010），仅 seed4 ΔF=+0.0110>PAIR_TOL 0.005 触发 paired_not_worse=false；对照 none/p1/tau2/b0.3 逐位复证轮次 1（sw 0.49/0.67、F̄ 0.0331）。明夜三选一：(a) redesign-3 新预注册（asym 变体，或论证放宽 PAIR_TOL——后者=改 gate，须显式拍板防 p-hacking）；(b) 组合拍板降规模（asym + switch_max 0.22 作限制报告 → 放行 Phase 3）；(c) 跳过 gate 直跑 experiment-long（前置未满足，不推荐）。publish 已完成：origin/main 推至 afa4abd（07:49 通道恢复后成功），本单元 commits 随后推送。
+- **拍板结果（2026-10-23 08:15，本单元落档 DECISIONS）**：取 wrap 恢复点选项 (b)——**Phase 3（experiment-long T=50）规则 = asym（k_in=2/k_out=3）**，F2 以限制报告携带（gate 形式上未过：seed4 配对 +0.0110>0.005；switch_max 0.22 与 F̄≤0.0331 已过）。偏离预注册降规模文本所举 k=2 的理由：同批实测 asym 在每一根轴严格优于 k=2（switch max 0.22 vs 0.44、F̄ 0.0304 vs 0.0333、配对 5/5 种子不差于、forced 0 vs 1），asym 为预注册候选④a 且参数跑前冻结——选它不是事后调参。
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
 
 ## 产物
@@ -27,6 +28,12 @@
 - `results/pilot-f2fix-summary.md` + `results/pilot-f2fix-summary.json`——**F2 修复主表与验收判读（本阶段结论）**
 - `experiments/analyze_f2fix.py`——F2 修复聚合分析（重写版：规则标签含 persist 轴 / F1 跨种子汇总预注册口径 / switch 双口径判读）
 - `experiments/gating.py`、`experiments/train.py`——F2 修复候选实现（TrendAdjustedZ 去趋势 z / decide persist=k 持续期平滑 / --f2-fix --persist --tau-hi）
+- `results/pilot-f2fix2-metrics.json`——**F2 修复第二轮正式实验（40 runs：8 唯一规则单元 × 5 种子 × 5 臂；config 含全部行为轴 f2_fix/persist/tau/band/k_in/k_out/ewma_alpha）**
+- `results/pilot-f2fix2-seed{0..4}-{ctrl,p2,p3,band,asym,robust,ewma,dtb}.log`——每单元完整日志（40 个）
+- `results/pilot-f2fix2-summary.md` + `results/pilot-f2fix2-summary.json`——**第二轮主表与验收判读（7/7 FAIL，asym 最近线）**
+- `results/_f2fix2-driver.log`——网格驱动运行记录（断点/续跑/skip 证据）
+- `experiments/run_f2fix2.py`——第二轮网格驱动（预注册单元表 + 可恢复 skip-done）
+- `experiments/analyze_f2fix2.py`——第二轮聚合分析（同口径：标签含全部行为轴 / F1 跨种子汇总 / switch 双口径 / 预注册预测对照）
 - `data/cifar10/`——CIFAR-10 解压数据（HF 镜像预置，gitignored）
 
 ## Phase 1 关键读数（正式结论域，5 种子）
@@ -115,6 +122,39 @@
 - **F1 未触发（全规则）**：跨种子汇总 max|ρ|=0.48-0.72（旧草稿 0.9667 系单种子 n=9 假高，已按预注册口径重算）。
 - F5 不变：cost_ratio ~0.34-0.39（规则层修复不改变触发计算成本）。
 
+## F2 修复第二轮读数（experiment-redesign-2，正式结论域，5 种子 × 5 臂；验收 gate=预注册不变）
+
+对照 none/p1/tau2/b0.3 同批重跑逐位复现轮次 1（spectral switch 0.49/0.67、F̄ 0.0331）。
+验收=switch<0.3（主口径 per-seed max；次口径 mean）+ F̄≤0.0331 + 同批配对每种子 ΔF≤0.005。
+
+| 规则（候选） | spectral F̄ | spectral sw mean/max | triplet F̄ | triplet sw mean/max | 总判(主/次) |
+|---|---|---|---|---|---|
+| none/p1/tau2/b0.3（对照） | 0.0331 | 0.49/0.67 | 0.0331 | 0.49/0.67 | （触发态） |
+| ④a asym i2o3 | **0.0304** | **0.22/0.22** | **0.0304** | **0.22/0.22** | FAIL/FAIL（仅 seed4 配对 +0.0110>0.005） |
+| ④a' band0.5 | 0.0359 | 0.47/0.67 | 0.0359 | 0.47/0.67 | FAIL/FAIL |
+| ④b robust z | 0.0444 | 0.24/0.44 | 0.0427 | 0.29/0.44 | FAIL/FAIL（beta 臂 sw 0.44 新违例） |
+| ④b' EWMA z | 0.0392 | 0.33/0.56 | 0.0385 | 0.33/0.56 | FAIL/FAIL |
+| ④c detrend-bound | 0.0451 | 0.29/0.56 | 0.0460 | 0.29/0.56 | FAIL/FAIL |
+| 家族 none/p2（k=2 重跑） | 0.0333 | 0.27/0.44 | 0.0333 | 0.27/0.44 | FAIL/FAIL（=轮次 1） |
+| 家族 none/p3（k=3 重跑） | 0.0433 | 0.13/0.22 | 0.0433 | 0.13/0.22 | FAIL/FAIL（=轮次 1） |
+
+- **7/7 候选未过预注册 gate（双口径都 FAIL）**；asym 最近线：switch 0.22/0.22 全种子一致
+  （唯一双口径过线）+ F̄ 0.0304≤0.0331 + isolate 15/forced 0（对照 14/2），仅 seed4 配对
+  ΔF=+0.0110>0.005（mean Δ=-0.0027，CI95[-0.0086,+0.0048] 含 0）。
+- **新事实：非对称持续期打破 persist 单调 trade-off**。k=1/2/3：switch 0.49/0.67→0.27/0.44
+  →0.13/0.22 vs F̄ 0.0331→0.0333→0.0433（单调交换）；asym 2/3 同时改善两侧——进 isolate 需
+  2 连续告警（保灵敏度）、退需 3 连续不告警（粘性退出）→ 单尖峰不再制造 i,m 振荡，且隔离
+  块后移/延长仍保护任务。seed4 代价机制：进入延迟错过 t5 单尖峰 → 隔离块 t6-t8（对照
+  t5/t8/t9），早期任务遗忘抬高（t1 0.074→0.116）。
+- **z 族修法（robust/EWMA）一律以 F 劣化为代价**：robust 钝化早期尖峰（bound 越界 13→8/40，
+  F̄ 0.0444，配对 Δ+0.0113 CI95[+0.0020,+0.0242] 显著变差）且激活 beta 通道（越界 1→3-4/40，
+  beta 臂 switch 0.44 新违例）；EWMA 告警局部化（bound 13→8/40）但稳态 z≈2.4 贴线 → seed3
+  switch 0.56。**detrend-bound 不直接激活 drift（0/40）但 F 仍劣化**（0.0451）——劣化来自
+  动作落点/路径效应而非通道激活，坐实「换告警结构 ≠ 修 F2」。
+- band 加宽 0.3→0.5 无效（预测应验）：0.47/0.67、F̄ 0.0359——hysteresis band 内 z 多 <1.5。
+- F1 未触发（全规则跨种子汇总 max|ρ|=0.6659-0.6818<0.9）；F5 不变（cost_ratio 0.37-0.41）。
+- **拍板**：Phase 3 规则=asym + F2 限制报告（详见 DECISIONS 2026-10-23 判读条）。
+
 ## 难度校准 v2（已拍板）
 width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告警，对比区不存在）→
 校准扫描定 **pilot = T=10 × width=64 × steps=100 × drift=0.5 × noise=1.0 × k=10**
@@ -136,24 +176,38 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
     PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix.py \
       --in results/pilot-f2fix-metrics.json --md results/pilot-f2fix-summary.md \
       --json results/pilot-f2fix-summary.json   # F2 修复验收判读
+    # F2 修复第二轮（experiment-redesign-2）：规则单元 = (--f2-fix {none,asym,robust,ewma,
+    # detrend-bound}, --persist {1,2,3}, --tau-hi, --band, [--k-in/--k-out], [--ewma-alpha])；
+    # 8 唯一单元 × 5 种子 = 40 runs（驱动可恢复，skip-done）：
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/run_f2fix2.py \
+      --out results/pilot-f2fix2-metrics.json   # 或逐单元 train.py --phase pilot --seed <S> \
+      --f2-fix <fix> --persist <k> --band <b> [--k-in 2 --k-out 3] [--ewma-alpha 0.3] \
+      --out results/pilot-f2fix2-metrics.json --log results/pilot-f2fix2-seed<S>-<tag>.log
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix2.py \
+      --in results/pilot-f2fix2-metrics.json --md results/pilot-f2fix2-summary.md \
+      --json results/pilot-f2fix2-summary.json   # 第二轮验收判读（同口径）
 
 ## git
 - 本地仓库 main 分支，今晚 8 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
   校准 v2 8573eb5 / pilot 结果+文档 119d61a / STATUS SHA 修正 ad57ffc / Phase 2 结果+脚本
   5a5aeae / Phase 2 判读落档 24f42c2 / design 管线登记 1ea4ba2 /
   **experiment-redesign 完成 d767fc2**）；2026-10-23 07:39 wrap 单元已建公开仓并推送：https://github.com/3gediana/cert-gating-multilayer-perturbation（origin/main，12 commits）
+- experiment-redesign-2：预注册+实现 afa4abd（07:32 台账冻结）→ wrap 并收 43ea954（首版
+  结果+恢复点）→ **本单元判读+拍板落档**（DECISIONS 判读条/STATUS 第二轮读数/workflow
+  回执；重生结果覆盖首版——行为逐位 identical，仅补 config 行为轴）。
 
 ## 下一步（workflow 管线）
-- **experiment-redesign-3 或组合拍板（三选一，见 07:55 恢复点）**：asym 是 7 候选中唯一
-  switch/F̄ 双过线的，卡点=配对条款单种子 seed4（+0.0110>0.005）。改 PAIR_TOL=改 gate 须
-  显式拍板；降规模路径（b）与轮次 1 的 k=2 降规模同性质。
-- **experiment-long（Phase 3）前置未满足**：F2 修复无候选过预注册 gate → 待 redesign-2
-  产出合格规则；或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后启动。
-  T=50 长序列"长序列才显著"预测 + 三元组增量复判 = H1 终判（F3 预注册：仍无增益则驳倒）。~45-80min
+- **ready：experiment-long（Phase 3 终判）**——规则=asym（k_in=2/k_out=3，预注册候选④a，
+  F2 限制报告携带：seed4 配对 +0.0110>0.005）。T=50 × 5 臂 × 5 种子：H1 主判据
+  （triplet vs 每一单量 ΔF̄ 配对 CI95 不含 0 且 ≥5pp）+ 次判据②（T=50 vs T=10 增益放大）
+  + F1 跨种子检查 + F2/F5 并列报告。T=50 下 F5 成本超线性加重须附成本曲线；规模在单元
+  窗口内跑不完时按种子分片写断点。~45-80min（看板卡已由 experiment-redesign-2 单元开）
+- redesign-3（备选，未启用）：若组合层面否决 asym 降规模，则新预注册 asym 变体
+  （如 k_out=4 或进入也需 3）或显式拍板放宽 PAIR_TOL（=改 gate，须防 p-hacking 论证）。
 - 图像门控候选修法（τ 分布校准=敏感性分析报告，防事后调参/尖峰持续期确认/隔离槽步数
   放大）随 F2 修复轮次验证，不改预注册主判据。
-- 遗留独立单元：gh 建公开仓库+push 全部本地 commits（publish=github-push 已授权），
-  remote 记入 notes/。~15min
+- 遗留独立单元：origin 推送本单元 commits（publish=github-push 已授权，wrap 单元 07:49
+  已推至 afa4abd；43ea954 及本单元 commit 待推）。
 
 ## 阻塞
-- 无硬阻塞；F2 修复轮次 1 全候选未过 gate（预注册处置路径=redesign，候选④集已列明）。
+- 无硬阻塞；F2 修复轮次 2 全候选仍未过 gate（7/7）——组合拍板降规模已落档（Phase 3 规则=asym + F2 限制报告），experiment-long 看板卡已开。撞道提示：STATUS.md/workflow.json 曾被并行 wrap 会话改写，落笔前须重读+git diff 核对。

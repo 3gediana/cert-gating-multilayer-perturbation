@@ -2,7 +2,7 @@
   "schema": "research-workflow/v1",
   "topic": "证书门控-多层扰动度量",
   "created_at": "2026-10-23T06:30:00+08:00",
-  "updated_at": "2026-10-22T23:26:54+00:00",
+  "updated_at": "2026-10-23T08:15:00+08:00",
   "registered_by": "night-unit candidate-design（驱动器 2026-10-23T06:17:26+08:00 派发，stage=design）",
   "admission": {
     "verdict": "admitted",
@@ -341,25 +341,8 @@
       "id": "experiment-long",
       "kind": "experiment",
       "depends_on": [
-        "experiment-redesign"
-      ],
-      "status": "pending",
-      "role": "executor",
-      "hypothesis_id": "H1",
-      "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
-      "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
-      "completion": {
-        "result": "results/"
-      },
-      "result": null,
-      "attempts": 0,
-      "strategy": "Phase 3 终判：合成 T=50 × 5 臂 × 5 种子（F2 修复后规则），H1 主判据+次判据②+F1 跨种子检查一次收口；F3 预注册：长序列仍无增益 → falsified（写负结果）；注意 T=50 下 F5 成本超线性会加重，须附成本曲线。规模在单元窗口内跑不完时按种子分片写断点。**前置状态（2026-10-23 experiment-redesign 回执）：F2 修复轮次 1 全候选未过 gate——Phase 3 待 experiment-redesign-2 产出合格规则，或组合拍板降规模（k=2 规则 + switch_max 0.44 作限制报告）后方可启动。**"
-    },
-    {
-      "id": "experiment-redesign-redesign",
-      "kind": "experiment",
-      "depends_on": [
-        "experiment-redesign"
+        "experiment-redesign",
+        "experiment-redesign-redesign"
       ],
       "status": "ready",
       "role": "executor",
@@ -371,7 +354,103 @@
       },
       "result": null,
       "attempts": 0,
-      "strategy": ""
+      "strategy": "Phase 3 终判：合成 T=50 × 5 臂 × 5 种子，H1 主判据+次判据②+F1 跨种子检查一次收口；F3 预注册：长序列仍无增益 → falsified（写负结果）；注意 T=50 下 F5 成本超线性会加重，须附成本曲线。规模在单元窗口内跑不完时按种子分片写断点。**前置状态（2026-10-23 experiment-redesign-2 回执+DECISIONS 拍板）：F2 修复轮次 2 候选④集 7/7 仍未过 gate——组合拍板降规模已落档：Phase 3 规则=asym（k_in=2/k_out=3，预注册候选④a，switch_max 0.22≤0.3 与 F̄ 0.0304≤0.0331 已过，唯 seed4 配对 ΔF=+0.0110>0.005），F2 以限制报告与主判据结果并列报告；不得改用未过 gate 更差的规则（k=2 被 asym 同批严格支配）。**"
+    },
+    {
+      "id": "experiment-redesign-redesign",
+      "kind": "experiment",
+      "depends_on": [
+        "experiment-redesign"
+      ],
+      "status": "done",
+      "role": "executor",
+      "hypothesis_id": "H1",
+      "prediction": "同一协议等参数量下三元组门控比任一单量门控遗忘更低，增益长序列（T>=50）才显著；次判据①三元组 vs baseline 有效。",
+      "failure_conditions": "F1 三量两两 |rho|>0.9 退化；F2 switch>30% 抖动；F3 无增益升长序列再判；F4 工程；F5 成本>20%。全文见 experiments/pilot-design.md §7。",
+      "completion": {
+        "result": "results/"
+      },
+      "result": {
+        "stage_id": "experiment-redesign-2",
+        "stage": "experiment-redesign-2",
+        "project": "证书门控-多层扰动度量",
+        "status": "ok",
+        "result_kind": "scientific_result",
+        "source_mode": "live",
+        "historical": false,
+        "result_files": [
+          "results/pilot-f2fix2-metrics.json",
+          "results/pilot-f2fix2-summary.md",
+          "results/pilot-f2fix2-summary.json",
+          "experiments/analyze_f2fix2.py",
+          "experiments/run_f2fix2.py",
+          "experiments/gating.py",
+          "experiments/train.py",
+          "notes/DECISIONS.md",
+          "STATUS.md",
+          "workflow.json"
+        ],
+        "artifacts": [
+          "results/pilot-f2fix2-summary.md",
+          "results/pilot-f2fix2-summary.json",
+          "results/pilot-f2fix2-metrics.json"
+        ],
+        "metrics": {
+          "runs": 40,
+          "unique_rule_cells": 8,
+          "seeds": 5,
+          "arms": 5,
+          "control": "none/p1/tau2/b0.3 同批重跑逐位复现轮次 1（spectral switch 0.49/0.67, F=0.0331）",
+          "candidates_failing_gate": "7/7（switch 主口径 per-seed max 与次口径 mean 双读均 FAIL；验收=switch<0.3+F̄≤0.0331+配对每种子不劣化>0.005）",
+          "asym_i2o3": {
+            "F_spectral": 0.0304,
+            "switch_mean_max": "0.22/0.22",
+            "isolate_forced": "15/0（对照 14/2）",
+            "paired_dF_per_seed": [-0.01, -0.007, -0.008, 0.0006, 0.011],
+            "paired_dF_mean": -0.0027,
+            "paired_ci95": [-0.0086, 0.0048],
+            "nearest_miss": "seed4 ΔF=+0.0110>PAIR_TOL 0.005；switch/F̄ 双过线",
+            "dominates_persist_k2": "switch max 0.22 vs 0.44、F̄ 0.0304 vs 0.0333、配对 5/5 种子不差于、forced 0 vs 1"
+          },
+          "robust_z": {
+            "F_spectral": 0.0444,
+            "switch": "0.24/0.44",
+            "note": "钝化早期尖峰（bound 越界 13→8/40）；激活 beta（beta 臂 switch 0.44 新违例）；配对 Δ+0.0113 CI95[+0.0020,+0.0242] 显著变差"
+          },
+          "ewma_z": {
+            "F_spectral": 0.0392,
+            "switch": "0.33/0.56",
+            "note": "告警局部化（bound 13→8/40）但稳态 z≈2.4 贴线 → seed3 switch 0.56"
+          },
+          "detrend_bound": {
+            "F_spectral": 0.0451,
+            "switch": "0.29/0.56",
+            "note": "drift 不直接激活（0/40）但 F 仍劣化——动作落点/路径效应，非通道激活"
+          },
+          "band_widening_0.5": {
+            "F_spectral": 0.0359,
+            "switch": "0.47/0.67",
+            "note": "无效（预注册预测应验：band 内 z 多 <1.5）"
+          },
+          "persist_family_tradeoff": "k=1/2/3 switch 0.49/0.67→0.27/0.44→0.13/0.22 vs F̄ 0.0331→0.0333→0.0433（单调交换）；asym 2/3 同时改善两侧——非对称持续期打破单调 trade-off",
+          "f1_max_abs_pooled_rho_per_rule": "0.6659-0.6818（全规则未触发）",
+          "f5_cost_ratio": "0.37-0.41（规则层修复不变触发计算成本，仍触发）",
+          "determinism": "对照/p2/p3 同批重跑与轮次 1 归档逐位 identical；config 轴修复后重生 40/40 行为字段逐位 identical"
+        },
+        "verdict": "falsified",
+        "verdict_scope": "F2 预注册修复候选集轮次 2（候选④集 5 候选 + persist 家族 2 消融）7/7 未过验收 gate——非 H1 判决；H1 仍未决（F3 长序列路径未走）。组合拍板（DECISIONS 2026-10-23 判读条）：Phase 3 规则=asym + F2 限制报告。",
+        "reproduction": "cd D:/hermes-data/research/证书门控-多层扰动度量 && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/run_f2fix2.py --out results/pilot-f2fix2-metrics.json && PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix2.py --in results/pilot-f2fix2-metrics.json --md results/pilot-f2fix2-summary.md --json results/pilot-f2fix2-summary.json",
+        "next_action": "continue",
+        "notes": "候选④集预注册跑前冻结（DECISIONS 2026-10-23 条）；7/7 FAIL 双口径；asym 最近线且严格支配 persist k=2（同批）；z 族修法（robust/EWMA）与 detrend-bound 一律以 F 劣化为代价；band 加宽无效；F1 未触发；F5 不变。拍板：Phase 3 用 asym 规则 + F2 限制报告（seed4 配对 +0.0110>0.005）。",
+        "commits": [
+          "afa4abd",
+          "43ea954"
+        ],
+        "observed_at": "2026-10-23T08:15:00+08:00"
+      },
+      "attempts": 1,
+      "strategy": "F2 修复第二轮：预注册候选④集（a 非对称持续期 i2o3 / a' 加宽 band0.5；b 稳健 z median-MAD / b' EWMA z；c 仅 bound 去趋势）+ 同批对照与 persist 家族消融；先写 DECISIONS 台账再跑（防事后调参），验收 gate 不变。",
+      "note": "2026-10-23 experiment-redesign-2 单元完成（看板卡 t_c667aa2d）：预注册 07:32 冻结 → 40 runs（run_f2fix2.py 驱动，断点续跑一次：首版 config 缺行为轴 → 修复后重生 40/40 行为逐位 identical）→ analyze_f2fix2.py 同口径判读 7/7 FAIL → DECISIONS 拍板 Phase 3 规则=asym+F2 限制报告。并行 wrap 收尾会话曾改写 STATUS/workflow.json 并提交首版结果（4133705/a8e6c5d/43ea954），无语义损失。"
     }
   ]
 }

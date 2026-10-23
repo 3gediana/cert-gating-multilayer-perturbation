@@ -128,3 +128,43 @@
 - 判读路径（按 workflow verdict_mapping 预注册）：有候选过 gate → 选为 Phase 3 规则、
   开 experiment-long（T=50 终判）；全败 → 升级组合决策——降规模选项（k=2 规则 +
   switch_max 0.44 作限制报告跑 Phase 3）拍板落档本台账（以实测判读为准，跑前不预设）。
+
+## [2026-10-23] F2 修复第二轮判读（experiment-redesign-2）：候选④集 7/7 未过 gate + Phase 3 规则拍板
+- 网格：8 唯一单元 × 5 种子 × 5 臂 = 40 runs（results/pilot-f2fix2-metrics.json，wall 429s
+  合计/单 run ~10.7s；run_f2fix2.py 驱动，可恢复）。对照 none/p1/tau2/b0.3 与 none/p2、
+  none/p3 同批重跑**逐位复现轮次 1**（spectral switch 0.49/0.67、F̄ 0.0331；k=2 0.27/0.44、
+  0.0333；k=3 0.13/0.22、0.0433）——对照有效 + GPU 确定性复证。
+- **总判：7/7 候选 FAIL（主口径 switch_max 与次口径 switch_mean 双读都 FAIL）**。
+  预注册预测对照（跑前冻结 vs 实测）：asym「switch 低于 k=2」✓（0.22<0.27）、「F̄≈k=2」✓
+  （0.0304≤0.0333）、「槽位耗尽风险」✗未现（forced 0 vs k=2 的 1）；band0.5「无效或边际」
+  ✓（0.47/0.67、F̄ 0.0359）；robust「告警减少、F̄ 向 baseline 回落」✓（bound 越界 13→8/40，
+  F̄ 0.0444，配对 Δ+0.0113 CI95[+0.0020,+0.0242] 不含 0——显著变差）；ewma「告警局部化」
+  部分✓（bound 13→8/40）但「贴线振荡」风险✓应验（seed3 switch 0.56）；detrend-bound
+  「drift/beta 不直接越界」✓（drift 0/40、beta 1/40）但「bound 振荡修复」✗（0.29/0.56、
+  F̄ 0.0451——动作路径/落点效应仍劣化 F）。
+- **asym（④a 非对称 i2o3）最近线且严格支配 persist k=2**：switch 0.22/0.22（全种子一致，
+  唯一双口径过线的候选）、F̄ 0.0304≤0.0331、isolate 15（对照 14）、forced 0（对照 2）；
+  配对每种子 [-0.0100,-0.0070,-0.0080,+0.0006,**+0.0110**]——仅 seed4 ΔF=+0.0110>
+  PAIR_TOL 0.005 触发 paired_not_worse=false（mean Δ=-0.0027，CI95[-0.0086,+0.0048] 含 0，
+  无显著损害）。**非对称持续期打破了 persist 家族的单调 trade-off**：k=1/2/3 的
+  switch 0.49/0.67→0.27/0.44→0.13/0.22 vs F̄ 0.0331→0.0333→0.0433 的单调交换被
+  asym 2/3 同时改善两侧（vs k=2：switch max 0.44→0.22、F̄ 0.0333→0.0304、配对 5/5 种子
+  不差于、forced 1→0）。seed4 机制：asym 进入需 2 连续告警 → 错过 t5 单尖峰、隔离块后移到
+  t6-t8（对照 t5/t8/t9），早期任务遗忘抬高（t1 0.074→0.116）。
+- F1 未触发（全规则跨种子汇总 max|ρ|=0.6659-0.6818<0.9）；F5 不变（cost_ratio 0.37-0.41，
+  规则层修复不改变触发计算成本）。
+- 管线缺陷修复（实例化缺陷，判据未动）：首版 run config 未记录 k_in/k_out/ewma_alpha
+  （标签缺行为轴——轮次 1 教训复发）→ train.py 补记后同种子重生 40 runs，**行为字段
+  40/40 逐位 identical**（修前/修后对比见 experiments/_probe_regen.py 输出）；分析标签
+  随之带 -i2o3/-a0.3 轴。审判口径与阈值零改动。
+- **拍板（组合决策，全败路径）**：Phase 3（experiment-long，T=50 终判）规则 = **asym
+  （k_in=2, k_out=3, RunningZ, tau2, band0.3）**，F2 以**限制报告**携带——gate 形式上
+  未过（seed4 配对 +0.0110>0.005），switch_max 0.22≤0.3 与 F̄≤0.0331 已过。理由：预注册
+  降规模文本举 k=2 为例，但同批实测 asym 在每一根轴上都严格优于 k=2（见上），带 k=2 进
+  终判等于带一个已知更差的规则；asym 是预注册候选④a、参数跑前冻结，选它不是事后调参。
+  H1 仍未决（F3 长序列路径未走）；Phase 3 判读时 F2 限制必须与主判据结果并列报告。
+- 并发记录（skill 撞车处置）：并行 wrap 收尾会话 07:32-07:56 在同一工作区改写
+  STATUS/workflow.json 并提交结果（4133705/a8e6c5d/43ea954，origin 已推），其变更经
+  diff 核对无语义损失（workflow.json 为驱动器回执 schema 重排）；本单元的重生结果
+  （config 轴修复后）覆盖 43ea954 提交的首版——行为逐位 identical，仅补全行为轴标签。
+  STATUS.md/workflow.json 为撞道热点文件，后续单元落笔前须重读+git diff 核对。
