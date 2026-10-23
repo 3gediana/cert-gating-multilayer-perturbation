@@ -264,6 +264,14 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   通道 flap）。另 PROJECT.md 项目档案首次入库（437576d），本地 main=**437576d**，
   待推 10 commits。夜间不再重试；白天通道恢复后
   `git -c credential.helper='!gh auth git-credential' push origin main` 直推，或注册 SSH key。
+- **PUSH 成功（2026-10-24 03:5x，组合统筹第 38 轮）**：代理 7897 路探测发现通道恢复——
+  读路 ls-remote 通（4133705）+ `push --dry-run` 全过（4133705..6610496 negotiate 完成）→
+  真实 push `GIT_TERMINAL_PROMPT=0 GCM_INTERACTIVE=Never git -c http(s).proxy=http://127.0.0.1:7897 push origin main`
+  **exit 0，4133705..6610496，11 commits 全部落地**；ls-remote 复核 origin/main=**6610496**
+  =本地 HEAD，待推清零。同刻直连读路仍 TLS eof（FLAP 实锤：故障在直连路 TLS 间歇断，
+  代理路间歇恢复；第 21 轮"显式代理也败"是当刻代理路同陷故障，非代理路固有封锁）。
+  GCM_INTERACTIVE=Never 亦排除 GCM GUI 挂起因素。**遗留 push 单元完结**；后续同步
+  一律走代理路 + GCM_INTERACTIVE=Never（仓库级 http(s).proxy=127.0.0.1:7897 本已配置）。
 
 ## 下一步（workflow 管线）
 - **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
@@ -276,8 +284,9 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   （合成 −41%/+0.0374 成立、图像 1 胜 1 负 1 平）；F2/F5 为独立报告项（成本曲线必附）。
 - redesign-3（备选，未启用）：若需继续修 F2 gate（asym 变体如 k_out=4，或显式拍板放宽
   PAIR_TOL 的防 p-hacking 论证），须新预注册另开单元；对 H1 终判无影响（H1 已驳倒）。
-- 遗留独立单元：origin 推送本课题 commits（publish=github-push 已授权；43ea954/291d180/
-  b2aeea4/36be619 起待推，通道恢复后补）。
+- ~~遗留独立单元：origin 推送本课题 commits~~ **已完结（2026-10-24 03:5x 第 38 轮）**：
+  代理路 push 成功，origin/main=6610496（43ea954/291d180/b2aeea4/36be619/ca63090/a74fcf7/
+  437576d/6610496 全部在远端）。
 
 - experiment-long（Phase 3 终判）：预冻结+管线步骤 36be619（train.py --T 覆盖 smoke 验证 +
   run_phase3.py + DECISIONS 协议冻结条）→ **本单元判读落档**（25 runs 804s + T=25 成本探针 +
