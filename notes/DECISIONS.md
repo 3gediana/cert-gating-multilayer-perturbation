@@ -168,3 +168,26 @@
   diff 核对无语义损失（workflow.json 为驱动器回执 schema 重排）；本单元的重生结果
   （config 轴修复后）覆盖 43ea954 提交的首版——行为逐位 identical，仅补全行为轴标签。
   STATUS.md/workflow.json 为撞道热点文件，后续单元落笔前须重读+git diff 核对。
+
+## [2026-10-23] Phase 3 长序列终判（experiment-long）：协议冻结 + 管线步骤（--T）
+- **管线实现步骤（本单元所有，判据未动）**：train.py 增加 `--T` 序列长度覆盖参数
+  （同 `--width` 模式：default None 保持 phase 默认；PHASES 仍无 T=50 入口）。
+  smoke 验证：`--T 4 --steps 6 --width 16` 单种子跑通，config 记 T=4、5 臂齐全、
+  records=4（scratch 产物，不入 results/）。
+- 网格驱动 experiments/run_phase3.py（可恢复 skip-done，签名含全部行为轴 + T——
+  轮次 1/2 标签缺轴教训）：唯一规则单元 asym（k_in=2/k_out=3, persist=1,
+  tau_hi=2.0, band=0.3）× T=50 × 种子 0..4 = 25 runs（train.py 单次调用跑 5 臂），
+  难度协议 = 合成 pilot 校准版（width 64 / steps 100 / drift 0.5 / noise 1.0 /
+  k 10 / anchor 64 / train_n 2000）。产物：results/phase3-metrics.json +
+  results/phase3-seed{0..4}.log + results/_phase3-driver.log。
+- **判读（预注册不变=workflow.json decisive_step + pilot-design.md §6/§7）**：
+  H1 主判据 triplet vs 每一单量臂（cka/spectral/beta）ΔF̄（配对种子 bootstrap
+  CI95 不含 0 且 |ΔF̄|≥5pp，口径同 analyze_pilot.py：Δ=F(单量)−F(triplet)）；
+  次判据② T=50 vs T=10 的 ΔF̄ 差距（T=10 对照读数取 results/pilot-summary.json：
+  triplet 0.0331 vs cka 0.0557/beta 0.0529/spectral 0.0331；同规则 asym T=10
+  读数见 pilot-f2fix2-summary.json 并列报告）；F1 跨种子汇总 Spearman（n 大；
+  单种子不可判）；F2/F5 并列报告（F2 已知限制：T=10 同批 seed4 配对
+  ΔF=+0.0110>0.005 未过 gate——Phase 3 规则按组合拍板以限制报告携带）；
+  F5 须附成本曲线（J+SVD+CKA vs 训练耗时，随 T 超线性）。
+- verdict_mapping（不变）：主判据达 → supported；长序列仍无增益 → falsified
+  （F3 终判，写负结果）；F1 触发 → falsified（三量退化）。

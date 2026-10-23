@@ -6,6 +6,7 @@
 
 phase: smoke（T=5 管线验证）/ pilot（T=10 正式 pilot）/ cifar（Split-CIFAR10）。
 五臂同数据同初始化同协议，只差进入告警的触发通道；所有臂都计算全部三量。
+--T 覆盖序列长度（Phase 3 长序列终判 T=50；default None 保持 phase 默认）。
 """
 import argparse
 import json
@@ -288,21 +289,23 @@ def main():
                     help="ewma：指数加权 alpha（预注册=0.3）")
     ap.add_argument("--device", default="auto")
     # 难度校准覆盖（pilot-design.md §4 要求 baseline 遗忘非零才有效度；
-    # 宽度提升会压掉遗忘，这些覆盖只用于校准扫描，校准结果拍板后烘焙进 PHASES）
+    # 宽度提升会压掉遗忘，这些覆盖只用于校准扫描，校准结果拍板后烘焙进 PHASES）。
+    # --T：序列长度覆盖（Phase 3 长序列终判 T=50 用；PHASES 无 T=50 入口，
+    # 2026-10-23 experiment-long 单元增加，见 notes/DECISIONS.md）。
     for flag, key, typ in [("--width", "width", int), ("--drift", "drift", float),
                            ("--noise", "noise", float), ("--k", "k", int),
-                           ("--steps", "steps", int)]:
+                           ("--steps", "steps", int), ("--T", "T", int)]:
         ap.add_argument(flag, type=typ, default=None)
     args = ap.parse_args()
 
     device = ("cuda" if torch.cuda.is_available() else "cpu") \
         if args.device == "auto" else args.device
     cfg = dict(PHASES[args.phase])
-    # 应用难度校准覆盖（None 保持 phase 默认值）
-    for key in ["width", "drift", "noise", "k", "steps"]:
+    # 应用难度/规模覆盖（None 保持 phase 默认值）
+    for key in ["width", "drift", "noise", "k", "steps", "T"]:
         v = getattr(args, key)
         if v is not None:
-            cfg[key] = int(v) if key in ("k", "steps", "width") else float(v)
+            cfg[key] = int(v) if key in ("k", "steps", "width", "T") else float(v)
     lines = []
 
     def log(msg):
