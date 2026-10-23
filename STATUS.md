@@ -247,6 +247,16 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   exit 124；ls-remote 正常返回——通道对读通、对写挂起）。本地 main=**ca63090** 完好；
   ls-remote origin/main=**4133705**（wrap 单元推后一直停留；afa4abd 起各 commit 待推）。
   遗留独立单元：通道恢复后 push（publish=github-push 已授权）。
+- **push 再挂（2026-10-24 00:1x→02:2x 轨迹）**：00:1x 复验通道恢复（ls-remote 通 +
+  push --dry-run exit 0）→ 02:2x 组合统筹第 21 轮真实 push 四路全败：①默认配置 100s
+  超时（credential.helper=manager 疑似 GUI 交互挂起）；②GIT_TERMINAL_PROMPT=0 +
+  GCM_INTERACTIVE=Never → `TLS connect error: unexpected eof while reading`（写通道
+  被断，读通道 ls-remote 仍通）；③显式走 http.proxy=127.0.0.1:7897（仓库级已配置）
+  → 同样 TLS unexpected eof；④SSH 探测 `ssh -T git@github.com` → Permission denied
+  (publickey)，~/.ssh/config 无 github 条目，id_ed25519 未注册到 3gediana。
+  判定：HTTPS 写通道间歇性被干扰（与 09:3x 同模式），SSH 备用路径未配置——
+  本地 main=**a74fcf7** 完好（8 commits 待推），通道恢复后 push（publish 已授权）；
+  备选根治：白天把 3gediana 的 SSH key 注册到 GitHub 或换 gh CLI credential。
 
 ## 下一步（workflow 管线）
 - **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
