@@ -193,8 +193,12 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   5a5aeae / Phase 2 判读落档 24f42c2 / design 管线登记 1ea4ba2 /
   **experiment-redesign 完成 d767fc2**）；2026-10-23 07:39 wrap 单元已建公开仓并推送：https://github.com/3gediana/cert-gating-multilayer-perturbation（origin/main，12 commits）
 - experiment-redesign-2：预注册+实现 afa4abd（07:32 台账冻结）→ wrap 并收 43ea954（首版
-  结果+恢复点）→ **本单元判读+拍板落档**（DECISIONS 判读条/STATUS 第二轮读数/workflow
-  回执；重生结果覆盖首版——行为逐位 identical，仅补 config 行为轴）。
+  结果+恢复点）→ **本单元判读+拍板落档 291d180**（DECISIONS 判读条/STATUS 第二轮读数/
+  workflow 回执；重生结果覆盖首版——行为逐位 identical，仅补 config 行为轴）。
+- **push 受阻（2026-10-23 08:4x）**：`git push origin main` 连续两次挂起（>19min 无输出，
+  ls-remote 同样超时）——github 通道当前不通（wrap 单元 07:49 亦报过通道波动后恢复）。
+  本地 main=291d180 完好；origin 停留在 afa4abd（43ea954/291d180 待推）。遗留独立单元：
+  通道恢复后 push（publish=github-push 已授权）。
 
 ## 下一步（workflow 管线）
 - **ready：experiment-long（Phase 3 终判）**——规则=asym（k_in=2/k_out=3，预注册候选④a，
