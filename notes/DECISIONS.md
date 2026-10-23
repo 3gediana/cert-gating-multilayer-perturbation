@@ -191,3 +191,47 @@
   F5 须附成本曲线（J+SVD+CKA vs 训练耗时，随 T 超线性）。
 - verdict_mapping（不变）：主判据达 → supported；长序列仍无增益 → falsified
   （F3 终判，写负结果）；F1 触发 → falsified（三量退化）。
+
+## [2026-10-23] Phase 3 终判（experiment-long）：T=50 × 5 臂 × 5 种子 → **falsified（F3 终判，负结果）**
+- 网格：唯一规则单元 asym（i2o3）× T=50（--T 覆盖）× 种子 0..4 × 5 臂 = 25 runs
+  （results/phase3-metrics.json；run_phase3.py 驱动 wall 804s，单 run ~154s；网格完整
+  5/5 种子 × 5/5 臂）。另跑 F5 成本曲线第三点 T=25 seed0（48.9s，results/
+  phase3-costprobe-T25-metrics.json，明确标注为成本探针、非判据网格）+ seed0 同批重跑
+  复证（行为字段逐位 identical）。
+- **H1 主判据：FAIL → verdict=falsified**（预注册 verdict_mapping「Phase 3 仍无增益」）：
+  - triplet vs spectral：ΔF̄=**0.0000**（动作序列 5/5 种子完全一致）——CI 不含 0 否、5pp 否；
+  - triplet vs cka：ΔF̄=+0.0374，CI95[+0.0299,+0.0439] 不含 0、5/5 种子同向，但 **<5pp**；
+  - triplet vs beta：同 cka（+0.0374，CI 同上，<5pp）；
+  - （vs baseline 并列：+0.0374，CI 不含 0，<5pp——次判据①在合成上仍成立但幅度不足。）
+  - 主判据总判 FAIL（要求三个单量臂全部 CI95 不含 0 且 ≥5pp）。
+- **结构解释（新事实）**：T=50 下 triplet 的全部增益来自 bound 单通道——spectral 与
+  triplet 动作逐位一致；drift/beta 通道 240 个决策点仅告警 1/4 次（bound 54 次），
+  cka/beta 臂 isolate 总数 0/50 任务。**槽位饱和**：3 个 isolate 槽在 task 4-8 即耗尽
+  （slots_used=4/4 每种子），中晚期告警全部落 forced merge（每种子 1-10 次，其中带告警
+  forced 1-10 次）——门控机制容量假设稀疏告警，长序列下运行在饱和区。
+- **次判据②（长序列增益放大）**：ΔF̄(triplet−单量) T=10→T=50：vs cka 0.0226→0.0374
+  （gap +0.0148）、vs beta 0.0198→0.0374（+0.0176）、vs spectral 0→0（同规则 asym T=10
+  读数并列：0.0253→0.0374，+0.0121）。方向符合「长序列才显著」预测（对从不告警臂放大），
+  但 5pp 条款在任何序列长度都未达到、vs spectral 恒为 0——**三元组无决策增量与 T 无关**。
+- **F1：未触发**。跨种子汇总（n=245/臂/对）max|ρ|=0.7331（drift~bound，spectral/triplet
+  臂；T=10 同口径 0.68，去趋势 −0.61）<0.9——三量在图像上仍可分离，H 非因三量退化被驳倒，
+  而是因无增量（F3）。
+- **F2：T=50 未触发**（switch mean/max=0.04/0.04，spectral/triplet；其余臂 0）。
+  **F2 限制报告（与主判据并列，不得隐去）**：T=10 同批验收 gate 形式上未过——asym seed4
+  配对 ΔF=+0.0110>PAIR_TOL 0.005（mean Δ=-0.0027，CI95[-0.0086,+0.0048] 含 0）；
+  switch_max 0.22≤0.3 与 F̄ 0.0304≤0.0331 已过。Phase 3 规则=asym 系组合拍板降规模
+  （候选④a 参数跑前冻结、同批严格支配 persist k=2），非事后调参。
+- **F5：严重触发**。cost_ratio 0.38（T=10）→1.19（T=25）→3.10（T=50）（阈值 0.2）。
+  成本曲线（results/phase3-cost-curve.png）：触发 J+SVD+CKA 0.55s→4.04s→21.5s/run
+  （vs T=10 实测 7.4×/39×，结构预期 T(T−1)/2 = 6.7×/27.2×——实测略超结构值，疑峰值
+  Js 显存占用 ~1.4GB 的分配器效应，仅作观察）；训练 merge 1.43→3.38→6.95s（线性 ~T）。
+  F5 按预注册不阻塞判决，但论文必须报告（taste 雷）。
+- 管线步骤：train.py `--T` 覆盖（smoke T=4 验证）；产物 results/phase3-metrics.json +
+  phase3-seed{0..4}.log + _phase3-driver.log + phase3-summary.{md,json} +
+  phase3-cost-curve.png + phase3-costprobe-T25-*；分析 experiments/analyze_phase3.py
+  （口径与 analyze_pilot.py 一致：Δ=F(单量)−F(triplet)、CI95 不含 0、|Δ|≥5pp）。
+- **结论落档**：H1 在合成尺度被驳倒（falsified，F3 终判）——三元组门控相对单量
+  （spectral/bound）无增量（T=10 与 T=50 均为 Δ=0），对 cka/beta/baseline 的增益
+  全部来自 bound 单通道且 <5pp；F1 未触发（三量不退化）。次判据①（门控 vs 不门控）
+  仍成立（+0.0374，CI95[+0.0299,+0.0439]，5/5 种子同向）。负结果写入 STATUS 与
+  workflow 回执；F2 未清状态随附。

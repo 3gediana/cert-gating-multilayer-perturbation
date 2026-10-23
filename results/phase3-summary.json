@@ -1,0 +1,1248 @@
+{
+ "analysis": "Phase 3 长序列终判（experiment-long）：T=50 × 5 臂 × 5 种子，规则=asym（k_in=2/k_out=3, persist=1, tau_hi=2.0, band=0.3），难度=合成 pilot 校准版（width64/steps100/drift0.5/noise1.0/k10/anchor64）。判读口径=workflow.json decisive_step + pilot-design.md §6/§7（与 analyze_pilot.py 一致）。",
+ "rule": "asym/p1/tau2/b0.3-i2o3",
+ "rule_key": [
+  "asym",
+  1,
+  2.0,
+  0.3,
+  2,
+  3,
+  null,
+  50
+ ],
+ "T": 50,
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "grid_complete_5seeds_x_5arms": true,
+ "config": {
+  "phase": "pilot",
+  "seed": 0,
+  "tau_hi": 2.0,
+  "band": 0.3,
+  "device": "cuda",
+  "torch": "2.10.0+cu128",
+  "f2_fix": "asym",
+  "persist": 1,
+  "T": 50,
+  "d": 30,
+  "k": 10,
+  "train_n": 2000,
+  "test_n": 500,
+  "anchor_n": 64,
+  "width": 64,
+  "steps": 100,
+  "batch": 256,
+  "lr": 0.001,
+  "slots": 4,
+  "noise": 1.0,
+  "drift": 0.5,
+  "k_in": 2,
+  "k_out": 3
+ },
+ "wall_sec_total": 764.19,
+ "arm_table": {
+  "baseline": {
+   "per_seed": [
+    {
+     "seed": 0,
+     "F": 0.337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6532,
+     "cost": 3.1734,
+     "trigger_sec": 21.655,
+     "train_sec": 6.824,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 1,
+     "F": 0.3508,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6295,
+     "cost": 3.1564,
+     "trigger_sec": 21.887,
+     "train_sec": 6.934,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 2,
+     "F": 0.3337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.659,
+     "cost": 3.0932,
+     "trigger_sec": 21.508,
+     "train_sec": 6.953,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 3,
+     "F": 0.3009,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6939,
+     "cost": 3.0832,
+     "trigger_sec": 21.732,
+     "train_sec": 7.048,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 4,
+     "F": 0.3288,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6624,
+     "cost": 3.2117,
+     "trigger_sec": 21.416,
+     "train_sec": 6.668,
+     "train_iso_sec": 0.0
+    }
+   ],
+   "F_mean": 0.3302,
+   "F_sd": 0.0183,
+   "F_per_seed": [
+    0.337,
+    0.3508,
+    0.3337,
+    0.3009,
+    0.3288
+   ],
+   "switch_per_seed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "switch_mean": 0.0,
+   "switch_max": 0.0,
+   "n_isolate_total": 0,
+   "n_forced_total": 0,
+   "acc_mean": 0.6596,
+   "cost_mean": 3.1436,
+   "cost_per_seed": [
+    3.1734,
+    3.1564,
+    3.0932,
+    3.0832,
+    3.2117
+   ],
+   "trigger_sec_mean": 21.64,
+   "train_sec_mean": 6.885,
+   "train_iso_sec_mean": 0.0
+  },
+  "cka": {
+   "per_seed": [
+    {
+     "seed": 0,
+     "F": 0.337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6532,
+     "cost": 3.1475,
+     "trigger_sec": 21.881,
+     "train_sec": 6.952,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 1,
+     "F": 0.3508,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6295,
+     "cost": 3.1167,
+     "trigger_sec": 22.078,
+     "train_sec": 7.084,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 2,
+     "F": 0.3337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.659,
+     "cost": 3.1615,
+     "trigger_sec": 21.988,
+     "train_sec": 6.955,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 3,
+     "F": 0.3009,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6939,
+     "cost": 3.14,
+     "trigger_sec": 21.621,
+     "train_sec": 6.886,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 4,
+     "F": 0.3288,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6624,
+     "cost": 3.1987,
+     "trigger_sec": 21.114,
+     "train_sec": 6.6,
+     "train_iso_sec": 0.0
+    }
+   ],
+   "F_mean": 0.3302,
+   "F_sd": 0.0183,
+   "F_per_seed": [
+    0.337,
+    0.3508,
+    0.3337,
+    0.3009,
+    0.3288
+   ],
+   "switch_per_seed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "switch_mean": 0.0,
+   "switch_max": 0.0,
+   "n_isolate_total": 0,
+   "n_forced_total": 0,
+   "acc_mean": 0.6596,
+   "cost_mean": 3.1529,
+   "cost_per_seed": [
+    3.1475,
+    3.1167,
+    3.1615,
+    3.14,
+    3.1987
+   ],
+   "trigger_sec_mean": 21.736,
+   "train_sec_mean": 6.895,
+   "train_iso_sec_mean": 0.0
+  },
+  "spectral": {
+   "per_seed": [
+    {
+     "seed": 0,
+     "F": 0.294,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 9,
+     "acc": 0.6968,
+     "cost": 3.1589,
+     "trigger_sec": 21.87,
+     "train_sec": 6.924,
+     "train_iso_sec": 0.412
+    },
+    {
+     "seed": 1,
+     "F": 0.3276,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 3,
+     "acc": 0.6547,
+     "cost": 3.126,
+     "trigger_sec": 21.825,
+     "train_sec": 6.981,
+     "train_iso_sec": 0.426
+    },
+    {
+     "seed": 2,
+     "F": 0.2966,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 8,
+     "acc": 0.6966,
+     "cost": 3.1141,
+     "trigger_sec": 21.609,
+     "train_sec": 6.939,
+     "train_iso_sec": 0.421
+    },
+    {
+     "seed": 3,
+     "F": 0.2648,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 10,
+     "acc": 0.7306,
+     "cost": 3.1627,
+     "trigger_sec": 21.214,
+     "train_sec": 6.707,
+     "train_iso_sec": 0.412
+    },
+    {
+     "seed": 4,
+     "F": 0.2812,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 1,
+     "acc": 0.7113,
+     "cost": 3.1883,
+     "trigger_sec": 21.231,
+     "train_sec": 6.659,
+     "train_iso_sec": 0.394
+    }
+   ],
+   "F_mean": 0.2928,
+   "F_sd": 0.0232,
+   "F_per_seed": [
+    0.294,
+    0.3276,
+    0.2966,
+    0.2648,
+    0.2812
+   ],
+   "switch_per_seed": [
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408
+   ],
+   "switch_mean": 0.0408,
+   "switch_max": 0.0408,
+   "n_isolate_total": 15,
+   "n_forced_total": 31,
+   "acc_mean": 0.698,
+   "cost_mean": 3.15,
+   "cost_per_seed": [
+    3.1589,
+    3.126,
+    3.1141,
+    3.1627,
+    3.1883
+   ],
+   "trigger_sec_mean": 21.55,
+   "train_sec_mean": 6.842,
+   "train_iso_sec_mean": 0.413
+  },
+  "beta": {
+   "per_seed": [
+    {
+     "seed": 0,
+     "F": 0.337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6532,
+     "cost": 3.1736,
+     "trigger_sec": 21.786,
+     "train_sec": 6.865,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 1,
+     "F": 0.3508,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6295,
+     "cost": 3.1598,
+     "trigger_sec": 21.832,
+     "train_sec": 6.909,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 2,
+     "F": 0.3337,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.659,
+     "cost": 3.1029,
+     "trigger_sec": 22.301,
+     "train_sec": 7.187,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 3,
+     "F": 0.3009,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6939,
+     "cost": 3.1883,
+     "trigger_sec": 21.554,
+     "train_sec": 6.76,
+     "train_iso_sec": 0.0
+    },
+    {
+     "seed": 4,
+     "F": 0.3288,
+     "switch": 0.0,
+     "n_isolate": 0,
+     "n_forced": 0,
+     "acc": 0.6624,
+     "cost": 3.1583,
+     "trigger_sec": 21.244,
+     "train_sec": 6.727,
+     "train_iso_sec": 0.0
+    }
+   ],
+   "F_mean": 0.3302,
+   "F_sd": 0.0183,
+   "F_per_seed": [
+    0.337,
+    0.3508,
+    0.3337,
+    0.3009,
+    0.3288
+   ],
+   "switch_per_seed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "switch_mean": 0.0,
+   "switch_max": 0.0,
+   "n_isolate_total": 0,
+   "n_forced_total": 0,
+   "acc_mean": 0.6596,
+   "cost_mean": 3.1566,
+   "cost_per_seed": [
+    3.1736,
+    3.1598,
+    3.1029,
+    3.1883,
+    3.1583
+   ],
+   "trigger_sec_mean": 21.743,
+   "train_sec_mean": 6.89,
+   "train_iso_sec_mean": 0.0
+  },
+  "triplet": {
+   "per_seed": [
+    {
+     "seed": 0,
+     "F": 0.294,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 10,
+     "acc": 0.6968,
+     "cost": 3.1383,
+     "trigger_sec": 22.137,
+     "train_sec": 7.054,
+     "train_iso_sec": 0.405
+    },
+    {
+     "seed": 1,
+     "F": 0.3276,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 3,
+     "acc": 0.6547,
+     "cost": 3.1695,
+     "trigger_sec": 21.933,
+     "train_sec": 6.92,
+     "train_iso_sec": 0.415
+    },
+    {
+     "seed": 2,
+     "F": 0.2966,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 8,
+     "acc": 0.6966,
+     "cost": 2.8198,
+     "trigger_sec": 20.733,
+     "train_sec": 7.353,
+     "train_iso_sec": 0.438
+    },
+    {
+     "seed": 3,
+     "F": 0.2648,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 10,
+     "acc": 0.7306,
+     "cost": 3.1766,
+     "trigger_sec": 21.413,
+     "train_sec": 6.741,
+     "train_iso_sec": 0.413
+    },
+    {
+     "seed": 4,
+     "F": 0.2812,
+     "switch": 0.0408,
+     "n_isolate": 3,
+     "n_forced": 1,
+     "acc": 0.7113,
+     "cost": 3.1776,
+     "trigger_sec": 21.156,
+     "train_sec": 6.658,
+     "train_iso_sec": 0.402
+    }
+   ],
+   "F_mean": 0.2928,
+   "F_sd": 0.0232,
+   "F_per_seed": [
+    0.294,
+    0.3276,
+    0.2966,
+    0.2648,
+    0.2812
+   ],
+   "switch_per_seed": [
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408
+   ],
+   "switch_mean": 0.0408,
+   "switch_max": 0.0408,
+   "n_isolate_total": 15,
+   "n_forced_total": 32,
+   "acc_mean": 0.698,
+   "cost_mean": 3.0964,
+   "cost_per_seed": [
+    3.1383,
+    3.1695,
+    2.8198,
+    3.1766,
+    3.1776
+   ],
+   "trigger_sec_mean": 21.474,
+   "train_sec_mean": 6.945,
+   "train_iso_sec_mean": 0.415
+  }
+ },
+ "main_criterion": {
+  "cka": {
+   "delta_mean": 0.0374,
+   "delta_per_seed": [
+    0.043,
+    0.0232,
+    0.0371,
+    0.0361,
+    0.0476
+   ],
+   "ci95": [
+    0.0299,
+    0.0439
+   ],
+   "ci_excludes_0": true,
+   "wins_all_seeds": true,
+   "delta_ge_5pp": false,
+   "is_single_arm": true
+  },
+  "spectral": {
+   "delta_mean": 0.0,
+   "delta_per_seed": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "ci_excludes_0": false,
+   "wins_all_seeds": false,
+   "delta_ge_5pp": false,
+   "is_single_arm": true
+  },
+  "beta": {
+   "delta_mean": 0.0374,
+   "delta_per_seed": [
+    0.043,
+    0.0232,
+    0.0371,
+    0.0361,
+    0.0476
+   ],
+   "ci95": [
+    0.0299,
+    0.0439
+   ],
+   "ci_excludes_0": true,
+   "wins_all_seeds": true,
+   "delta_ge_5pp": false,
+   "is_single_arm": true
+  },
+  "baseline": {
+   "delta_mean": 0.0374,
+   "delta_per_seed": [
+    0.043,
+    0.0232,
+    0.0371,
+    0.0361,
+    0.0476
+   ],
+   "ci95": [
+    0.0299,
+    0.0439
+   ],
+   "ci_excludes_0": true,
+   "wins_all_seeds": true,
+   "delta_ge_5pp": false,
+   "is_single_arm": false
+  },
+  "_main_pass": false
+ },
+ "secondary_criterion_2_T_vs_T": {
+  "pilot_original_rule_T10": {
+   "cka": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0226,
+    "gap_T50_minus_T10": 0.0148,
+    "amplified_at_T50": true
+   },
+   "spectral": {
+    "delta_F_mean_T50": 0.0,
+    "delta_F_mean_T10": 0.0,
+    "gap_T50_minus_T10": 0.0,
+    "amplified_at_T50": false
+   },
+   "beta": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0198,
+    "gap_T50_minus_T10": 0.0176,
+    "amplified_at_T50": true
+   },
+   "baseline": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0226,
+    "gap_T50_minus_T10": 0.0148,
+    "amplified_at_T50": true
+   }
+  },
+  "asym_same_rule_T10": {
+   "cka": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0253,
+    "gap_T50_minus_T10": 0.0121,
+    "amplified_at_T50": true
+   },
+   "spectral": {
+    "delta_F_mean_T50": 0.0,
+    "delta_F_mean_T10": 0.0,
+    "gap_T50_minus_T10": 0.0,
+    "amplified_at_T50": false
+   },
+   "beta": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0253,
+    "gap_T50_minus_T10": 0.0121,
+    "amplified_at_T50": true
+   },
+   "baseline": {
+    "delta_F_mean_T50": 0.0374,
+    "delta_F_mean_T10": 0.0253,
+    "gap_T50_minus_T10": 0.0121,
+    "amplified_at_T50": true
+   }
+  }
+ },
+ "t10_readings": {
+  "pilot_original_rule_T10": {
+   "baseline": {
+    "F_mean": 0.0557,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.0522,
+     0.0284,
+     0.0486
+    ]
+   },
+   "cka": {
+    "F_mean": 0.0557,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.0522,
+     0.0284,
+     0.0486
+    ]
+   },
+   "spectral": {
+    "F_mean": 0.0331,
+    "F_per_seed": [
+     0.038,
+     0.0604,
+     0.0286,
+     0.016,
+     0.0224
+    ]
+   },
+   "beta": {
+    "F_mean": 0.0529,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.038,
+     0.0284,
+     0.0486
+    ]
+   },
+   "triplet": {
+    "F_mean": 0.0331,
+    "F_per_seed": [
+     0.038,
+     0.0604,
+     0.0286,
+     0.016,
+     0.0224
+    ]
+   }
+  },
+  "asym_same_rule_T10": {
+   "baseline": {
+    "F_mean": 0.0557,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.0522,
+     0.0284,
+     0.0486
+    ]
+   },
+   "cka": {
+    "F_mean": 0.0557,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.0522,
+     0.0284,
+     0.0486
+    ]
+   },
+   "spectral": {
+    "F_mean": 0.0304,
+    "F_per_seed": [
+     0.028,
+     0.0534,
+     0.0206,
+     0.0166,
+     0.0334
+    ]
+   },
+   "beta": {
+    "F_mean": 0.0557,
+    "F_per_seed": [
+     0.0534,
+     0.096,
+     0.0522,
+     0.0284,
+     0.0486
+    ]
+   },
+   "triplet": {
+    "F_mean": 0.0304,
+    "F_per_seed": [
+     0.028,
+     0.0534,
+     0.0206,
+     0.0166,
+     0.0334
+    ]
+   }
+  }
+ },
+ "f1_pooled_cross_seed": {
+  "baseline": {
+   "drift~bound": {
+    "pooled_rho": -0.6484,
+    "detrended_rho": -0.5768,
+    "per_seed_rho": [
+     -0.7172,
+     -0.6443,
+     -0.8036,
+     -0.7506,
+     -0.729
+    ],
+    "per_seed_max_abs": 0.8036,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "drift~beta": {
+    "pooled_rho": 0.0351,
+    "detrended_rho": 0.3029,
+    "per_seed_rho": [
+     0.2514,
+     0.133,
+     -0.0407,
+     0.1122,
+     -0.2584
+    ],
+    "per_seed_max_abs": 0.2584,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "bound~beta": {
+    "pooled_rho": -0.1429,
+    "detrended_rho": -0.2017,
+    "per_seed_rho": [
+     -0.146,
+     0.0114,
+     0.1441,
+     -0.0738,
+     0.2394
+    ],
+    "per_seed_max_abs": 0.2394,
+    "f1_raw": false,
+    "f1_detrended": false
+   }
+  },
+  "cka": {
+   "drift~bound": {
+    "pooled_rho": -0.6484,
+    "detrended_rho": -0.5768,
+    "per_seed_rho": [
+     -0.7172,
+     -0.6443,
+     -0.8036,
+     -0.7506,
+     -0.729
+    ],
+    "per_seed_max_abs": 0.8036,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "drift~beta": {
+    "pooled_rho": 0.0351,
+    "detrended_rho": 0.3029,
+    "per_seed_rho": [
+     0.2514,
+     0.133,
+     -0.0407,
+     0.1122,
+     -0.2584
+    ],
+    "per_seed_max_abs": 0.2584,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "bound~beta": {
+    "pooled_rho": -0.1429,
+    "detrended_rho": -0.2017,
+    "per_seed_rho": [
+     -0.146,
+     0.0114,
+     0.1441,
+     -0.0738,
+     0.2394
+    ],
+    "per_seed_max_abs": 0.2394,
+    "f1_raw": false,
+    "f1_detrended": false
+   }
+  },
+  "spectral": {
+   "drift~bound": {
+    "pooled_rho": -0.7331,
+    "detrended_rho": -0.6072,
+    "per_seed_rho": [
+     -0.8203,
+     -0.7339,
+     -0.7434,
+     -0.7692,
+     -0.8901
+    ],
+    "per_seed_max_abs": 0.8901,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "drift~beta": {
+    "pooled_rho": -0.1298,
+    "detrended_rho": 0.062,
+    "per_seed_rho": [
+     0.0145,
+     -0.1266,
+     -0.231,
+     -0.1251,
+     -0.1749
+    ],
+    "per_seed_max_abs": 0.231,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "bound~beta": {
+    "pooled_rho": 0.0483,
+    "detrended_rho": -0.0356,
+    "per_seed_rho": [
+     -0.0335,
+     0.2771,
+     0.2611,
+     0.2019,
+     0.2267
+    ],
+    "per_seed_max_abs": 0.2771,
+    "f1_raw": false,
+    "f1_detrended": false
+   }
+  },
+  "beta": {
+   "drift~bound": {
+    "pooled_rho": -0.6484,
+    "detrended_rho": -0.5768,
+    "per_seed_rho": [
+     -0.7172,
+     -0.6443,
+     -0.8036,
+     -0.7506,
+     -0.729
+    ],
+    "per_seed_max_abs": 0.8036,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "drift~beta": {
+    "pooled_rho": 0.0351,
+    "detrended_rho": 0.3029,
+    "per_seed_rho": [
+     0.2514,
+     0.133,
+     -0.0407,
+     0.1122,
+     -0.2584
+    ],
+    "per_seed_max_abs": 0.2584,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "bound~beta": {
+    "pooled_rho": -0.1429,
+    "detrended_rho": -0.2017,
+    "per_seed_rho": [
+     -0.146,
+     0.0114,
+     0.1441,
+     -0.0738,
+     0.2394
+    ],
+    "per_seed_max_abs": 0.2394,
+    "f1_raw": false,
+    "f1_detrended": false
+   }
+  },
+  "triplet": {
+   "drift~bound": {
+    "pooled_rho": -0.7331,
+    "detrended_rho": -0.6072,
+    "per_seed_rho": [
+     -0.8203,
+     -0.7339,
+     -0.7434,
+     -0.7692,
+     -0.8901
+    ],
+    "per_seed_max_abs": 0.8901,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "drift~beta": {
+    "pooled_rho": -0.1298,
+    "detrended_rho": 0.062,
+    "per_seed_rho": [
+     0.0145,
+     -0.1266,
+     -0.231,
+     -0.1251,
+     -0.1749
+    ],
+    "per_seed_max_abs": 0.231,
+    "f1_raw": false,
+    "f1_detrended": false
+   },
+   "bound~beta": {
+    "pooled_rho": 0.0483,
+    "detrended_rho": -0.0356,
+    "per_seed_rho": [
+     -0.0335,
+     0.2771,
+     0.2611,
+     0.2019,
+     0.2267
+    ],
+    "per_seed_max_abs": 0.2771,
+    "f1_raw": false,
+    "f1_detrended": false
+   }
+  }
+ },
+ "f1_max_abs_pooled": 0.7331,
+ "f1_triggered": false,
+ "f2": {
+  "limitation_report_T10": "F2 gate 形式上未过（T=10 同批）：asym seed4 配对 ΔF=+0.0110>PAIR_TOL 0.005（mean Δ=-0.0027，CI95[-0.0086,+0.0048] 含 0）；switch_max 0.22≤0.3 与 F̄ 0.0304≤0.0331 已过。Phase 3 规则=asym 系组合拍板降规模（候选④a 参数跑前冻结，同批实测严格支配 persist k=2），非事后调参。",
+  "switch_mean_by_arm": {
+   "baseline": 0.0,
+   "cka": 0.0,
+   "spectral": 0.0408,
+   "beta": 0.0,
+   "triplet": 0.0408
+  },
+  "switch_max_by_arm": {
+   "baseline": 0.0,
+   "cka": 0.0,
+   "spectral": 0.0408,
+   "beta": 0.0,
+   "triplet": 0.0408
+  },
+  "switch_per_seed": {
+   "baseline": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "cka": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "spectral": [
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408
+   ],
+   "beta": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "triplet": [
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408,
+    0.0408
+   ]
+  },
+  "triggered_T50": false,
+  "isolate_forced_total": {
+   "baseline": "0/0",
+   "cka": "0/0",
+   "spectral": "15/31",
+   "beta": "0/0",
+   "triplet": "15/32"
+  }
+ },
+ "f5": {
+  "threshold": 0.2,
+  "cost_ratio_mean_by_arm": {
+   "baseline": 3.1436,
+   "cka": 3.1529,
+   "spectral": 3.15,
+   "beta": 3.1566,
+   "triplet": 3.0964
+  },
+  "triggered": true
+ },
+ "f5_cost_curve": [
+  {
+   "T": 10,
+   "arms": {
+    "baseline": {
+     "trigger_sec_mean": 0.553,
+     "train_merge_sec_mean": 1.424,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 0.389
+    },
+    "cka": {
+     "trigger_sec_mean": 0.548,
+     "train_merge_sec_mean": 1.456,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 0.376
+    },
+    "spectral": {
+     "trigger_sec_mean": 0.549,
+     "train_merge_sec_mean": 1.445,
+     "train_isolate_sec_mean": 0.436,
+     "cost_ratio_mean": 0.3802
+    },
+    "beta": {
+     "trigger_sec_mean": 0.565,
+     "train_merge_sec_mean": 1.42,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 0.3979
+    },
+    "triplet": {
+     "trigger_sec_mean": 0.549,
+     "train_merge_sec_mean": 1.43,
+     "train_isolate_sec_mean": 0.435,
+     "cost_ratio_mean": 0.3845
+    }
+   },
+   "expected_trigger_ratio_vs_T10": 1.0,
+   "trigger_ratio_vs_T10": 1.0,
+   "train_ratio_vs_T10": 1.0
+  },
+  {
+   "T": 25,
+   "arms": {
+    "baseline": {
+     "trigger_sec_mean": 4.047,
+     "train_merge_sec_mean": 3.467,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 1.1671
+    },
+    "cka": {
+     "trigger_sec_mean": 4.156,
+     "train_merge_sec_mean": 3.49,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 1.1906
+    },
+    "spectral": {
+     "trigger_sec_mean": 4.033,
+     "train_merge_sec_mean": 3.383,
+     "train_isolate_sec_mean": 0.398,
+     "cost_ratio_mean": 1.1921
+    },
+    "beta": {
+     "trigger_sec_mean": 4.131,
+     "train_merge_sec_mean": 3.397,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 1.2163
+    },
+    "triplet": {
+     "trigger_sec_mean": 4.043,
+     "train_merge_sec_mean": 3.378,
+     "train_isolate_sec_mean": 0.403,
+     "cost_ratio_mean": 1.1966
+    }
+   },
+   "expected_trigger_ratio_vs_T10": 6.667,
+   "trigger_ratio_vs_T10": 7.364,
+   "train_ratio_vs_T10": 2.362
+  },
+  {
+   "T": 50,
+   "arms": {
+    "baseline": {
+     "trigger_sec_mean": 21.64,
+     "train_merge_sec_mean": 6.885,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 3.1436
+    },
+    "cka": {
+     "trigger_sec_mean": 21.736,
+     "train_merge_sec_mean": 6.895,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 3.1529
+    },
+    "spectral": {
+     "trigger_sec_mean": 21.55,
+     "train_merge_sec_mean": 6.842,
+     "train_isolate_sec_mean": 0.413,
+     "cost_ratio_mean": 3.15
+    },
+    "beta": {
+     "trigger_sec_mean": 21.743,
+     "train_merge_sec_mean": 6.89,
+     "train_isolate_sec_mean": 0.0,
+     "cost_ratio_mean": 3.1566
+    },
+    "triplet": {
+     "trigger_sec_mean": 21.474,
+     "train_merge_sec_mean": 6.945,
+     "train_isolate_sec_mean": 0.415,
+     "cost_ratio_mean": 3.0964
+    }
+   },
+   "expected_trigger_ratio_vs_T10": 27.222,
+   "trigger_ratio_vs_T10": 39.115,
+   "train_ratio_vs_T10": 4.857
+  }
+ ],
+ "f5_cost_curve_png": "results/phase3-cost-curve.png",
+ "f3_structure": {
+  "triplet_equals_spectral_actions_per_seed": {
+   "0": true,
+   "1": true,
+   "2": true,
+   "3": true,
+   "4": true
+  },
+  "triplet_equals_spectral_all_seeds": true,
+  "never_alarm_arms": {
+   "cka": true,
+   "beta": true
+  },
+  "slot_saturation_triplet": {
+   "0": {
+    "slots_used": 4,
+    "isolate_tasks": [
+     4,
+     5,
+     6
+    ],
+    "first_forced_task": 7,
+    "n_forced_with_alarm": 9
+   },
+   "1": {
+    "slots_used": 4,
+    "isolate_tasks": [
+     4,
+     5,
+     6
+    ],
+    "first_forced_task": 10,
+    "n_forced_with_alarm": 3
+   },
+   "2": {
+    "slots_used": 4,
+    "isolate_tasks": [
+     4,
+     5,
+     6
+    ],
+    "first_forced_task": 9,
+    "n_forced_with_alarm": 8
+   },
+   "3": {
+    "slots_used": 4,
+    "isolate_tasks": [
+     4,
+     5,
+     6
+    ],
+    "first_forced_task": 9,
+    "n_forced_with_alarm": 10
+   },
+   "4": {
+    "slots_used": 4,
+    "isolate_tasks": [
+     6,
+     7,
+     8
+    ],
+    "first_forced_task": 27,
+    "n_forced_with_alarm": 1
+   }
+  }
+ },
+ "verdict": "falsified",
+ "verdict_reason": "F3 终判：T=50 长序列下 triplet 仍未对每一单量臂达成 CI95 不含 0 且 ≥5pp 的增益（负结果）"
+}

@@ -1,7 +1,7 @@
 # 状态
 
-- 阶段：experiment-redesign-2 完成（F2 修复第二轮 40 runs 判读落档：候选④集 7/7 双口径 FAIL → 组合拍板：Phase 3 规则=asym（i2o3）+ F2 限制报告；H1 仍未决——experiment-long T=50 终判待跑）
-- 最近更新：2026-10-23 08:15（experiment-redesign-2 单元：预注册候选④集跑前冻结（07:32）→ 40 runs → 同口径判读 7/7 FAIL → DECISIONS 拍板 Phase 3 规则=asym；详见「F2 修复第二轮读数」节）
+- 阶段：**experiment-long（Phase 3 终判）完成——H1 在合成尺度 falsified（F3 终判，负结果）**：T=50 × 5 臂 × 5 种子，triplet vs spectral ΔF̄=0（动作 5/5 全同）、vs cka/beta +0.0374（CI95 不含 0 但 <5pp）→ 主判据 FAIL；F1 未触发（0.7331<0.9）、F2 T=50 未触发（0.04；T=10 gate 未过状态以限制报告并列）、F5 严重触发（cost_ratio 3.10，成本曲线已附）。详见「Phase 3 终判读数」节。
+- 最近更新：2026-10-23 09:2x（experiment-long 单元：--T 管线步骤 + 协议冻结 commit 36be619 → 25 runs（804s）+ T=25 成本探针 + seed0 重跑逐位复证 → analyze_phase3 判读落档）
 - 收尾恢复点（2026-10-23 07:55，wrap 收线）：experiment-redesign-2 **40/40 runs 完成（736.9s，skipped 0）+ analyze_f2fix2 判读落盘 results/pilot-f2fix2-summary.{md,json}**。判读：7/7 候选主/次口径全 FAIL（预注册 gate 三条件）；**asym（④a 非对称 i2o3）最近线**——switch 0.22/0.22 全种子一致、F̄ 0.0304≤0.0331、4/5 种子配对改善（Δ=-0.007~-0.010），仅 seed4 ΔF=+0.0110>PAIR_TOL 0.005 触发 paired_not_worse=false；对照 none/p1/tau2/b0.3 逐位复证轮次 1（sw 0.49/0.67、F̄ 0.0331）。明夜三选一：(a) redesign-3 新预注册（asym 变体，或论证放宽 PAIR_TOL——后者=改 gate，须显式拍板防 p-hacking）；(b) 组合拍板降规模（asym + switch_max 0.22 作限制报告 → 放行 Phase 3）；(c) 跳过 gate 直跑 experiment-long（前置未满足，不推荐）。publish 已完成：origin/main 推至 afa4abd（07:49 通道恢复后成功），本单元 commits 随后推送。
 - **拍板结果（2026-10-23 08:15，本单元落档 DECISIONS）**：取 wrap 恢复点选项 (b)——**Phase 3（experiment-long T=50）规则 = asym（k_in=2/k_out=3）**，F2 以限制报告携带（gate 形式上未过：seed4 配对 +0.0110>0.005；switch_max 0.22 与 F̄≤0.0331 已过）。偏离预注册降规模文本所举 k=2 的理由：同批实测 asym 在每一根轴严格优于 k=2（switch max 0.22 vs 0.44、F̄ 0.0304 vs 0.0333、配对 5/5 种子不差于、forced 0 vs 1），asym 为预注册候选④a 且参数跑前冻结——选它不是事后调参。
 - Phase 2 要点：F1 存活（max|ρ|=0.60，去趋势口径一臂 −0.88 贴线）；次判据①图像上不成立（合成 −41% 不外推，1 胜 1 负 1 平，spectral 均 F 反超 baseline）；主判据未达 F3 延续（triplet≡beta 动作 3/3 全同）；F2/F5 触发（F5 稳态 ~11× 训练耗时）
@@ -31,6 +31,14 @@
 - `results/pilot-f2fix2-metrics.json`——**F2 修复第二轮正式实验（40 runs：8 唯一规则单元 × 5 种子 × 5 臂；config 含全部行为轴 f2_fix/persist/tau/band/k_in/k_out/ewma_alpha）**
 - `results/pilot-f2fix2-seed{0..4}-{ctrl,p2,p3,band,asym,robust,ewma,dtb}.log`——每单元完整日志（40 个）
 - `results/pilot-f2fix2-summary.md` + `results/pilot-f2fix2-summary.json`——**第二轮主表与验收判读（7/7 FAIL，asym 最近线）**
+- `results/phase3-metrics.json`——**Phase 3 终判正式实验（25 runs：T=50 × 5 臂 × 5 种子，规则=asym i2o3）**
+- `results/phase3-seed{0..4}.log`——每种子完整日志（5 个）
+- `results/phase3-summary.md` + `results/phase3-summary.json`——**Phase 3 主表与终判判读（H1 falsified/F3 终判；F1/F2/F5 并列）**
+- `results/phase3-cost-curve.png`——**F5 成本曲线（J+SVD+CKA vs 训练耗时，T=10/25/50）**
+- `results/phase3-costprobe-T25-metrics.json` + `results/phase3-costprobe-T25-seed0.log`——F5 成本曲线第三点探针（T=25 seed0，非判据网格）
+- `results/_phase3-driver.log`——Phase 3 网格驱动运行记录
+- `experiments/run_phase3.py`——Phase 3 网格驱动（预注册单元表 + 可恢复 skip-done，签名含 T）
+- `experiments/analyze_phase3.py`——Phase 3 聚合分析（同口径：主判据配对 bootstrap/次判据② T 对比/F1 跨种子汇总/F2 限制报告/F5 成本曲线/F3 结构+槽位饱和）
 - `results/_f2fix2-driver.log`——网格驱动运行记录（断点/续跑/skip 证据）
 - `experiments/run_f2fix2.py`——第二轮网格驱动（预注册单元表 + 可恢复 skip-done）
 - `experiments/analyze_f2fix2.py`——第二轮聚合分析（同口径：标签含全部行为轴 / F1 跨种子汇总 / switch 双口径 / 预注册预测对照）
@@ -155,6 +163,37 @@
 - F1 未触发（全规则跨种子汇总 max|ρ|=0.6659-0.6818<0.9）；F5 不变（cost_ratio 0.37-0.41）。
 - **拍板**：Phase 3 规则=asym + F2 限制报告（详见 DECISIONS 2026-10-23 判读条）。
 
+## Phase 3 终判读数（experiment-long，正式结论域，5 种子 × 5 臂；规则=asym i2o3，T=50）
+
+| 臂 | F̄±sd | F̄/种子 | acc | switch(mean/max) | isolate(forced) | cost_ratio |
+|---|---|---|---|---|---|---|
+| baseline | 0.3302±0.0183 | 0.3370/0.3508/0.3337/0.3009/0.3288 | 0.6596 | 0/0 | 0(0) | 3.144 |
+| cka | 0.3302±0.0183 | 同上（从不告警） | 0.6596 | 0/0 | 0(0) | 3.153 |
+| spectral | **0.2928**±0.0232 | 0.2940/0.3276/0.2966/0.2648/0.2812 | 0.6980 | 0.04/0.04 | 15(31) | 3.150 |
+| beta | 0.3302±0.0183 | 同上（从不告警） | 0.6596 | 0/0 | 0(0) | 3.157 |
+| triplet | **0.2928**±0.0232 | 同 spectral | 0.6980 | 0.04/0.04 | 15(32) | 3.096 |
+
+- **H1 主判据：FAIL → verdict=falsified（F3 终判，负结果）**。triplet vs spectral
+  ΔF̄=0.0000（动作序列 5/5 种子完全一致）；vs cka/beta ΔF̄=+0.0374（配对 CI95
+  [+0.0299,+0.0439] 不含 0、5/5 种子同向）但 **<5pp 条款**；vs baseline 同幅（次判据①
+  合成仍成立但幅度不足）。预注册口径（Δ=F(单量)−F(triplet)，CI95 不含 0 且 ≥5pp）。
+- **结构解释（新事实）**：triplet 全部增益来自 bound 单通道——spectral/triplet 动作
+  逐位一致；drift/beta 通道 240 决策点仅告警 1/4 次（bound 54 次）。**槽位饱和**：
+  3 个 isolate 槽在 task 4-8 耗尽（slots_used=4/4），中晚期告警全落 forced merge
+  （每种子 1-10 次）——机制容量假设稀疏告警，长序列运行在饱和区。
+- **次判据②**：ΔF̄ T=10→T=50：vs cka 0.0226→0.0374、vs beta 0.0198→0.0374、
+  vs spectral 0→0（同规则 asym T=10：0.0253→0.0374）。对从不告警臂增益随 T 放大
+  （方向合预测），但 5pp 从未达到、vs spectral 恒 0——三元组无决策增量与 T 无关。
+- **F1 未触发**：跨种子汇总（n=245）max|ρ|=0.7331（drift~bound）<0.9——三量不退化，
+  H 因「无增量」而非「三量退化」被驳倒。
+- **F2：T=50 未触发**（switch 0.04/0.04）；**F2 限制报告（并列）**：T=10 同批 gate
+  形式上未过（asym seed4 配对 ΔF=+0.0110>0.005；switch_max 0.22 与 F̄ 0.0304 已过），
+  Phase 3 规则=asym 系组合拍板降规模（候选④a 跑前冻结），非事后调参。
+- **F5 严重触发**：cost_ratio 0.38（T=10）→1.19（T=25）→3.10（T=50）。成本曲线
+  （results/phase3-cost-curve.png）：触发 J+SVD+CKA 0.55→4.04→21.5s/run（实测 7.4×/39×
+  vs 结构 T(T−1)/2 预期 6.7×/27.2×）；训练 1.43→3.38→6.95s（线性）。论文必须报告。
+- 复证：seed0 同批重跑行为字段逐位 identical（GPU 确定性复证，同轮次 1/2 惯例）。
+
 ## 难度校准 v2（已拍板）
 width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告警，对比区不存在）→
 校准扫描定 **pilot = T=10 × width=64 × steps=100 × drift=0.5 × noise=1.0 × k=10**
@@ -186,6 +225,15 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
     PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_f2fix2.py \
       --in results/pilot-f2fix2-metrics.json --md results/pilot-f2fix2-summary.md \
       --json results/pilot-f2fix2-summary.json   # 第二轮验收判读（同口径）
+    # Phase 3 长序列终判（experiment-long）：规则=asym（--k-in 2 --k-out 3），T=50 经
+    # train.py --T 覆盖（PHASES 无 T=50 入口）；25 runs 驱动可恢复：
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/run_phase3.py \
+      --out results/phase3-metrics.json   # 或逐种子 train.py --phase pilot --seed <S> \
+      --T 50 --f2-fix asym --persist 1 --tau-hi 2.0 --band 0.3 --k-in 2 --k-out 3 \
+      --out results/phase3-metrics.json --log results/phase3-seed<S>.log
+    PYTHONUTF8=1 G:/ai/python11/python.exe experiments/analyze_phase3.py \
+      --in results/phase3-metrics.json --md results/phase3-summary.md \
+      --json results/phase3-summary.json   # Phase 3 终判判读（含 F5 成本曲线）
 
 ## git
 - 本地仓库 main 分支，今晚 8 commits（建档 785ea69 / smoke 1f2d427 / 收工 ed238b7 /
@@ -201,17 +249,30 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   通道恢复后 push（publish=github-push 已授权）。
 
 ## 下一步（workflow 管线）
-- **ready：experiment-long（Phase 3 终判）**——规则=asym（k_in=2/k_out=3，预注册候选④a，
-  F2 限制报告携带：seed4 配对 +0.0110>0.005）。T=50 × 5 臂 × 5 种子：H1 主判据
-  （triplet vs 每一单量 ΔF̄ 配对 CI95 不含 0 且 ≥5pp）+ 次判据②（T=50 vs T=10 增益放大）
-  + F1 跨种子检查 + F2/F5 并列报告。T=50 下 F5 成本超线性加重须附成本曲线；规模在单元
-  窗口内跑不完时按种子分片写断点。~45-80min（看板卡已由 experiment-redesign-2 单元开）
-- redesign-3（备选，未启用）：若组合层面否决 asym 降规模，则新预注册 asym 变体
-  （如 k_out=4 或进入也需 3）或显式拍板放宽 PAIR_TOL（=改 gate，须防 p-hacking 论证）。
-- 图像门控候选修法（τ 分布校准=敏感性分析报告，防事后调参/尖峰持续期确认/隔离槽步数
-  放大）随 F2 修复轮次验证，不改预注册主判据。
-- 遗留独立单元：origin 推送本单元 commits（publish=github-push 已授权，wrap 单元 07:49
-  已推至 afa4abd；43ea954 及本单元 commit 待推）。
+- **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
+  （F3，负结果）——25 runs（T=50 × 5 臂 × 5 种子，规则=asym），主判据 FAIL（vs spectral
+  ΔF̄=0；vs cka/beta +0.0374 CI95 不含 0 但 <5pp）；F1 未触发（0.7331）；F2 T=50 未触发
+  （0.04，T=10 gate 未过状态限制报告并列）；F5 严重触发（cost_ratio 3.10，成本曲线
+  results/phase3-cost-curve.png）。判读落档 DECISIONS/STATUS/workflow.json。
+- 论文负结果成文（建议主路径）：三平台一致结论——三元组门控无单量外增量（合成 T=10/T=50
+  动作与 spectral 逐位一致；Split-CIFAR10 与 beta 全同），门控本身有效但对分布敏感
+  （合成 −41%/+0.0374 成立、图像 1 胜 1 负 1 平）；F2/F5 为独立报告项（成本曲线必附）。
+- redesign-3（备选，未启用）：若需继续修 F2 gate（asym 变体如 k_out=4，或显式拍板放宽
+  PAIR_TOL 的防 p-hacking 论证），须新预注册另开单元；对 H1 终判无影响（H1 已驳倒）。
+- 遗留独立单元：origin 推送本课题 commits（publish=github-push 已授权；43ea954/291d180/
+  b2aeea4/36be619 起待推，通道恢复后补）。
+
+- experiment-long（Phase 3 终判）：预冻结+管线步骤 36be619（train.py --T 覆盖 smoke 验证 +
+  run_phase3.py + DECISIONS 协议冻结条）→ **本单元判读落档**（25 runs 804s + T=25 成本探针 +
+  seed0 重跑逐位复证 + analyze_phase3 判读：H1 falsified/F3 终判；DECISIONS 判读条 / STATUS
+  Phase 3 读数 / workflow 回执）。
 
 ## 阻塞
-- 无硬阻塞；F2 修复轮次 2 全候选仍未过 gate（7/7）——组合拍板降规模已落档（Phase 3 规则=asym + F2 限制报告），experiment-long 看板卡已开。撞道提示：STATUS.md/workflow.json 曾被并行 wrap 会话改写，落笔前须重读+git diff 核对。
+- 无硬阻塞。**H1 已在合成尺度终判 falsified（F3）**：三元组门控相对单量（bound/spectral）
+  无决策增量（T=10 与 T=50 均为 ΔF̄=0，动作逐位一致），对 cka/beta/baseline 的增益全部来自
+  bound 单通道且 <5pp；F1 未触发（三量不退化，H 因无增量被驳倒）。次判据①（门控有效）
+  在合成上成立（+0.0374，CI95[+0.0299,+0.0439]，5/5 种子同向）但图像分布上不成立
+  （Phase 2）。F2 未清状态（T=10 seed4 配对 +0.0110>0.005）随全部结论并列。剩余可选方向：
+  论文负结果成文（主）；redesign-3（显式放宽 PAIR_TOL 的防 p-hacking 论证或 asym 变体）
+  已非判据需要；origin 推送遗留（通道恢复后补推 43ea954/291d180/b2aeea4 起各 commit）。
+  撞道提示：STATUS.md/workflow.json 为并行会话热点文件，落笔前须重读+git diff 核对。
