@@ -257,6 +257,13 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   判定：HTTPS 写通道间歇性被干扰（与 09:3x 同模式），SSH 备用路径未配置——
   本地 main=**a74fcf7** 完好（8 commits 待推），通道恢复后 push（publish 已授权）；
   备选根治：白天把 3gediana 的 SSH key 注册到 GitHub 或换 gh CLI credential。
+- **push 第 5 路实证（2026-10-24 02:4x，组合统筹第 27 轮）**：gh credential helper
+  （gh 已登录 3gediana，repo scope，keyring）替代 GCM 后 push 仍 TLS unexpected eof——
+  **凭据层排除，写通道（receive-pack POST）传输层干扰坐实**（读通道 ls-remote 同刻
+  返回 4133705 正常、curl 双路 200；本轮开工时 ls-remote 一度 fatal 数分钟后自愈，
+  通道 flap）。另 PROJECT.md 项目档案首次入库（437576d），本地 main=**437576d**，
+  待推 10 commits。夜间不再重试；白天通道恢复后
+  `git -c credential.helper='!gh auth git-credential' push origin main` 直推，或注册 SSH key。
 
 ## 下一步（workflow 管线）
 - **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
