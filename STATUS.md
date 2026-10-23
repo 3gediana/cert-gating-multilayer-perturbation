@@ -243,10 +243,10 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
 - experiment-redesign-2：预注册+实现 afa4abd（07:32 台账冻结）→ wrap 并收 43ea954（首版
   结果+恢复点）→ **本单元判读+拍板落档 291d180**（DECISIONS 判读条/STATUS 第二轮读数/
   workflow 回执；重生结果覆盖首版——行为逐位 identical，仅补 config 行为轴）。
-- **push 受阻（2026-10-23 08:4x）**：`git push origin main` 连续两次挂起（>19min 无输出，
-  ls-remote 同样超时）——github 通道当前不通（wrap 单元 07:49 亦报过通道波动后恢复）。
-  本地 main=291d180 完好；origin 停留在 afa4abd（43ea954/291d180 待推）。遗留独立单元：
-  通道恢复后 push（publish=github-push 已授权）。
+- **push 仍受阻（2026-10-23 09:3x 复试）**：`git push origin main` 再次挂起（100s 超时杀，
+  exit 124；ls-remote 正常返回——通道对读通、对写挂起）。本地 main=**ca63090** 完好；
+  ls-remote origin/main=**4133705**（wrap 单元推后一直停留；afa4abd 起各 commit 待推）。
+  遗留独立单元：通道恢复后 push（publish=github-push 已授权）。
 
 ## 下一步（workflow 管线）
 - **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
