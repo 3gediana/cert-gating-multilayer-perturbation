@@ -274,6 +274,14 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   一律走代理路 + GCM_INTERACTIVE=Never（仓库级 http(s).proxy=127.0.0.1:7897 本已配置）。
 
 ## 下一步（workflow 管线）
+- **白天推进会下午场落账（2026-10-24 16:1x）**：novelty/fit gate 判定文档回执已判读
+  （PASS，notes/novelty-fit-gate.md + commit 5af36ce）——结论：负结果可发表（定位
+  「边界条件」），三选一建议 A（负结果成文）优先 / B（redesign-3，须解除 hold+新
+  预注册+slots 探针）并行可选 / C（release）兜底；**拍板归用户，未批准前不派卡、
+  不转 active、不开实验**。另：选题官 13:00 两条候选已落用户审批通道
+  （batch-ee157aeba408：「任务审批」note 5a39d9d4…）——AGN 序列任务初始化
+  ε-rank 判决（本课题谱量证书在结构干预下的语义存活实验，即开放问题 Q1 的实验化）
+  与 scaffold 方向约束（「往哪变」侧，与本科「何时变」互补）。组合 hold 维持。
 - **白天推进会上午场派卡（2026-10-24 11:12）**：novelty/fit gate 判定文档已派发
   （看板卡 t_9243e3b1 → research-literature，status=running；hold 允许的唯一
   screening 后续）。边界：不自行转 active、不启动成文、不开实验；产出
