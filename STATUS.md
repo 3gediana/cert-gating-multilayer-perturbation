@@ -274,6 +274,10 @@ width 256 时遗忘被容量压到 0.003~0.005（近饱和，spectral 从不告�
   一律走代理路 + GCM_INTERACTIVE=Never（仓库级 http(s).proxy=127.0.0.1:7897 本已配置）。
 
 ## 下一步（workflow 管线）
+- **白天推进会上午场派卡（2026-10-24 11:12）**：novelty/fit gate 判定文档已派发
+  （看板卡 t_9243e3b1 → research-literature，status=running；hold 允许的唯一
+  screening 后续）。边界：不自行转 active、不启动成文、不开实验；产出
+  notes/novelty-fit-gate.md 后等组合拍板（负结果成文/redesign-3/release 三选一）。
 - **experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified**
   （F3，负结果）——25 runs（T=50 × 5 臂 × 5 种子，规则=asym），主判据 FAIL（vs spectral
   ΔF̄=0；vs cka/beta +0.0374 CI95 不含 0 但 <5pp）；F1 未触发（0.7331）；F2 T=50 未触发
