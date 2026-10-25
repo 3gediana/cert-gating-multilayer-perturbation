@@ -12,14 +12,13 @@
 <!-- dossier:seed:end -->
 
 ## 当前快照（系统按项目事实维护）
-- 当前阶段：experiment-long（Phase 3 终判）完成——H1 在合成尺度 falsified（F3 终判，负结果）：T=50 × 5 臂 × 5 种子，triplet vs spectral ΔF̄=0（动作 5/5 全同）、vs cka/beta +0.0374（CI95 不含 0 但 <5pp）→ 主判据 FAIL；F1 未触发（0.7331<0.9）、F2 T=50 未触发（0.04；T=10 gate 未过状态以限制报告并列）、F5 严重触发（cost_ratio 3.10，成本曲线已附）。详见「Phase 3 终判读数」节。
-- 下一步：experiment-long（Phase 3 终判）已完成（2026-10-23 09:2x）：H1 合成尺度终判 falsified （F3，负结果）——25 runs（T=50 × 5 臂 × 5 种子，规则=asym），主判据 FAIL（vs spectral
-- 阻塞：无硬阻塞。H1 已在合成尺度终判 falsified（F3）：三元组门控相对单量（bound/spectral） 无决策增量（T=10 与 T=50 均为 ΔF̄=0，动作逐位一致），对 cka/beta/baseline 的增益全部来自
+- 当前阶段：已停止（用户撤回，2026-10-25T12:30:14+08:00）
+- 下一步：无；本项目不进入后续阶段，夜间不得再派单。
+- 阻塞：无/未记录
 - 最近结果：判定 falsified；发现 FAIL：triplet vs spectral ΔF̄=0.0000（动作 5/5 种子逐位一致）；vs cka ΔF̄=+0.0374 CI95[+0.0299,+0.0439] 不含 0 但 <5pp；vs beta 同幅 <5pp；vs baseline +0.0374 <5pp（次判据①合成成立但幅度不足）
 - 关键指标：{"runs": 25, "F_triplet": 0.2928, "F_spectral": 0.2928, "F_baseline": 0.3302, "f1_max_abs_pooled_rho": 0.7331, "f5_cost_ratio": "0.38（T=10）→1.19（T=25 探针）→3.10（T=50）（阈值 0.2，严重触发）"}
 
 ## 决策要点（最近记录）
-- triplet vs spectral：ΔF̄=0.0000（动作序列 5/5 种子完全一致）——CI 不含 0 否、5pp 否；
 - triplet vs cka：ΔF̄=+0.0374，CI95[+0.0299,+0.0439] 不含 0、5/5 种子同向，但 <5pp；
 - triplet vs beta：同 cka（+0.0374，CI 同上，<5pp）；
 - （vs baseline 并列：+0.0374，CI 不含 0，<5pp——次判据①在合成上仍成立但幅度不足。）
@@ -31,6 +30,7 @@
 - F5：严重触发。cost_ratio 0.38（T=10）→1.19（T=25）→3.10（T=50）（阈值 0.2）。
 - 管线步骤：train.py --T 覆盖（smoke T=4 验证）；产物 results/phase3-metrics.json +
 - 结论落档：H1 在合成尺度被驳倒（falsified，F3 终判）——三元组门控相对单量
+- 用户撤回（2026-10-25T12:30:14+08:00）：用户在项目笔记勾选「停止此项目」
 
 ## 给讲解者的说明
 - 以上是项目全部已确认事实；没有写的事实不存在，不要猜数字或结论。
